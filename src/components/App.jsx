@@ -1,5 +1,6 @@
 import { Outlet } from "react-router";
 import FileManagement from "../pages/file-management/FileManagement";
+import GoogleCalendar from "./GoogleCalendar";
 import setTheme from "../utils/setTheme";
 import ThemeSwitcher from "./ThemeSwitcher";
 
@@ -20,6 +21,7 @@ function App() {
       </nav>
       <main>
         <Outlet />
+        <GoogleCalendar username='User1' />
       </main>
     </>
   );
