@@ -4,6 +4,7 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import FileManagement from './pages/file-management/FileManagement';
 import GroupDashboard from './pages/group-dashboard/GroupDashboard';
+import Groups from './pages/Groups'
 import { createBrowserRouter } from 'react-router-dom';
 export default createBrowserRouter([
   {
@@ -46,6 +47,10 @@ export default createBrowserRouter([
             path: '/group/:group',
             element: <GroupDashboard />,
           },
+          {
+            path: '/groups',
+            element: <Groups />,
+          }
         ],
       },
       {
