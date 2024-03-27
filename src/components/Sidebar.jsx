@@ -10,7 +10,7 @@ import {
   } from "@/components/ui/drawer"
 import { Button } from "@/components/ui/button"
 import { HomeIcon, ChatBubbleIcon, CalendarIcon, HamburgerMenuIcon } from "@radix-ui/react-icons"
-import { CircleUserRoundIcon, FilesIcon, LayoutDashboardIcon, LogOutIcon, UsersIcon } from "lucide-react"
+import { CircleUserRoundIcon, FilesIcon, LayoutDashboardIcon, LogOutIcon, UsersIcon, WebcamIcon } from "lucide-react"
 import { Link } from "react-router-dom"
 import { logout } from "../utils/db"
 
@@ -46,13 +46,9 @@ const links = [
     path: "/profile"
   },
   {
+    icon: <WebcamIcon className="mr-2 h-6 w-6 text-black dark:text-white"/>,
     name: "Video Chat",
     path: "/video"
-  },
-  {
-    icon: <LayoutDashboardIcon className="mr-2 h-6 w-6 text-black dark:text-white"/>,
-    name: "Personal Dashboard",
-    path: "/personalDashboard"
   },
 ]
 
