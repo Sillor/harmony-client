@@ -11,7 +11,7 @@
   color-scheme: light dark;
   color: rgba(255, 255, 255, 0.87);
   background-color: var(--background);
-  --nav-bar-height: 3rem
+  --nav-bar-height: 3rem;
 }
 
 html,
@@ -30,6 +30,7 @@ body {
 nav {
   height: var(--nav-bar-height);
 }
+
 main {
   display: flex;
   flex-direction: column;
@@ -37,6 +38,10 @@ main {
   padding-top: 2rem;
   width: 100%;
   min-height: calc(100% - var(--nav-bar-height));
+}
+
+main:has(> [data-no-padding]) {
+  padding-top: 0;
 }
 
 #root {

@@ -1,0 +1,3 @@
+.video-call--chat-tabs {
+  max-height: calc(100svh - var(--nav-bar-height));
+}
