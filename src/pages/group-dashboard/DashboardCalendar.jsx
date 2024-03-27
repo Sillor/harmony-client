@@ -20,7 +20,7 @@ import { Button } from '@/components/ui/button';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 
-async function onDeleteEvent (groupName, name, refetchEvents) {
+async function onDeleteEvent (groupName, name, date, refetchEvents) {
 
   const isConfirmed = window.confirm('Are you sure you want to delete this event?');
   if (!isConfirmed) {
@@ -28,6 +28,12 @@ async function onDeleteEvent (groupName, name, refetchEvents) {
   }
 
   try {
+    const currentDate = DateTime.now().toISODate();
+    if(date < currentDate){
+      window.alert('Error: Cannot delete past events.')
+      return
+    }
+
     const response = await axios.delete('http://localhost:5000/api/calendar/deleteevent', {
       data: { calendar: groupName, eventName: name }
     })
@@ -35,7 +41,7 @@ async function onDeleteEvent (groupName, name, refetchEvents) {
     console.log('Event deleted:', response.data);
     return response.data;
   } catch (error) {
-    console.error('Error deleting event:', error);
+    console.log(error);
     throw error;
   }    
 };
@@ -50,7 +56,7 @@ function Event(props) {
       </div>
       <div
         className="delete-icon opacity-0 group-hover:opacity-100 cursor-pointer"
-        onClick={() => onDeleteEvent(props.groupName, props.name, props.refetchEvents)}
+        onClick={() => onDeleteEvent(props.groupName, props.name, props.date, props.refetchEvents)}
       >
         <X />
       </div>
