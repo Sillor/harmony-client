@@ -46,3 +46,7 @@ main {
 .d-flex {
   display: flex;
 }
+
+body {
+  zoom: 90%;
+}
