@@ -1,10 +1,13 @@
 import { Outlet, useNavigate } from "react-router";
+import { Link } from "react-router-dom";
+
 import CallRequestAlert from "./CallRequestAlert";
 import setTheme from "../utils/setTheme";
 import ThemeSwitcher from "./ThemeSwitcher";
 import Sidebar from "./Sidebar";
 import { peer } from "../utils/globals";
 import { useRef, useState } from "react";
+
 function App() {
   const [callAlert, setCallAlert] = useState(null);
   const navigate = useNavigate()
@@ -49,7 +52,7 @@ function App() {
       <nav className="z-50 w-full bg-background sticky top-0 flex items-center px-3 justify-between group shadow-md dark:shadow-black">
         <div className="flex items-center gap-3">
           <Sidebar />
-          <div className="font-bold text-2xl">Harmony</div>
+          <Link to="/" className="font-bold text-2xl">Harmony</Link>
         </div>
         <div>
           <div className="justify-self-end flex items-center w-6 h-6">
