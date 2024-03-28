@@ -47,7 +47,7 @@ const CalendarTemplate = ({groupName}) => {
         <iframe
             className='border-double border-8 border-black dark:border-gray-700 rounded-lg'
             src={src}
-            style={{ width: '70vw', height: '80vh', borderRadius: 15}}
+            style={{ width: '75vw', height: '90vh', borderRadius: 15}}
             title='calendar'
         ></iframe>
     </>
@@ -67,7 +67,7 @@ const GoogleCalendar = ({username}) => {
 
 
   return (
-    <div className='k'>
+    <div className=''>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <div style={{ display: 'flex', justifyContent: 'center' }}><Button className='w-full bg-black text-white dark:bg-gray-700 mb-1' variant="outline">{username} Select Calendar</Button></div>
@@ -81,6 +81,7 @@ const GoogleCalendar = ({username}) => {
         </DropdownMenuContent>
       </DropdownMenu>
       <CalendarTemplate groupName={groupName} />
+      <pre className='text-center mt-3'>To edit or delete calendar events, press the button on the bottom right of the calendar labeled "Google Calendar" or use the dashboard. -----------------------------------------^</pre>
     </div>
   )
 };
