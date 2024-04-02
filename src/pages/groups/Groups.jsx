@@ -20,6 +20,10 @@ import {
 import { CheckIcon } from "lucide-react";
 import { XIcon } from "lucide-react";
 
+import CreateTeamDialog from "./CreateTeamDialog";
+
+import { useState } from "react";
+
 const Groups = () => {
 
     const groupsList = [
@@ -74,6 +78,7 @@ const Groups = () => {
             </CardContent>
         </Card>
 
+        <CreateTeamDialog/>
     </> 
   );
 };

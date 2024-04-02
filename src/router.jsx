@@ -5,7 +5,7 @@ import Register from './pages/Register';
 import FileManagement from './pages/file-management/FileManagement';
 import GroupDashboard from './pages/group-dashboard/GroupDashboard';
 import PersonalDashboard from './pages/personal-dashboard/PersonalDashboard';
-import Groups from './pages/Groups'
+import Groups from './pages/groups/Groups'
 import { createBrowserRouter } from 'react-router-dom';
 export default createBrowserRouter([
   {
