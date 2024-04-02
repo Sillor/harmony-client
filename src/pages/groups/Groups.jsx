@@ -26,6 +26,9 @@ import { useState } from "react";
 
 const Groups = () => {
 
+    const [groupName, setGroupName] = useState("");
+    const [groupOwner, setGroupOwner] = useState("");
+
     const groupsList = [
         {
             name: 'group1',
@@ -77,8 +80,7 @@ const Groups = () => {
                 </Table>
             </CardContent>
         </Card>
-
-        <CreateTeamDialog/>
+        <CreateTeamDialog groupName={groupName} setGroupName={setGroupName} groupOwner={groupOwner} setGroupOwner={setGroupOwner} />
     </> 
   );
 };

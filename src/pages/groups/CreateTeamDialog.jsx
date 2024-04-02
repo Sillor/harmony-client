@@ -10,23 +10,19 @@ import {
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { PlusCircleIcon } from "lucide-react";
-
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import axios from "axios";
 
 
-const CreateTeamDialog = () => {
-
-  const [groupName, setGroupName] = useState("");
-  const [groupOwner, setGroupOwner] = useState("");
-  console.log(groupName, groupOwner);
-
+const CreateTeamDialog = ({groupName, groupOwner, setGroupName, setGroupOwner}) => {
 
   const handleCreateGroup = async () => {
     try {
         console.log('handle create group triggered');
         await axios.get(`http://localhost:5000/api/calendar/createcalendar?groupName=${groupName}`);
+        setGroupName('')
+        setGroupOwner('')
         // need to add function for inserting group details into the database
     } catch (error) {
         console.error("Error creating calendar:", error);
@@ -62,17 +58,15 @@ const CreateTeamDialog = () => {
         </div>
         <DialogFooter className="sm:justify-between">
           <DialogClose asChild>
-            <Button
-              type="button"
-              variant="secondary"
-              className="md:w-[130px] bg-white text-black border border-primary"
-            >
+            <Button type="button" variant="secondary" className="md:w-[130px] bg-white text-black border border-primary">
               Cancel
             </Button>
           </DialogClose>
-          <Button onClick={handleCreateGroup} type="submit" className="md:w-[130px] mb-2 md:mb-0">
-            Create
-          </Button>
+          <DialogClose asChild>
+            <Button onClick={handleCreateGroup} type="submit" className="md:w-[130px] mb-2 md:mb-0">
+              Create
+            </Button>
+          </DialogClose>
         </DialogFooter>
       </DialogContent>
     </Dialog>
