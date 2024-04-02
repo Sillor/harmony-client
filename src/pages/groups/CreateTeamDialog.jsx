@@ -19,7 +19,6 @@ const CreateTeamDialog = ({groupName, groupOwner, setGroupName, setGroupOwner}) 
 
   const handleCreateGroup = async () => {
     try {
-        console.log('handle create group triggered');
         await axios.get(`http://localhost:5000/api/calendar/createcalendar?groupName=${groupName}`);
         setGroupName('')
         setGroupOwner('')
