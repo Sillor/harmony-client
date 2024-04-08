@@ -33,9 +33,9 @@ export function login({ email, password }) {
       if (data.success) {
         globals.email = email;
         localStorage.setItem("harmony_email", email);
-        getPeerAuthToken().then((token)=>{
-          peer.authToken = token
-        })
+        getPeerAuthToken().then((token) => {
+          peer.authToken = token;
+        });
       }
       return data;
     })
@@ -64,9 +64,9 @@ export function register({ email, password }) {
       if (data.success) {
         globals.email = email;
         localStorage.setItem("harmony_email", email);
-        getPeerAuthToken().then((token)=>{
-          peer.authToken = token
-        })
+        getPeerAuthToken().then((token) => {
+          peer.authToken = token;
+        });
       }
       return data;
     })
@@ -89,7 +89,7 @@ export function logout() {
       if (data.success) {
         globals.email = null;
         localStorage.removeItem("harmony_email");
-        peer.authToken = null
+        peer.authToken = null;
       }
       return data;
     })
@@ -106,9 +106,10 @@ export function getPeerAuthToken(callback) {
     credentials: "include",
   })
     .then((res) => {
-      if (res.status !== 200) throw res.statusText
+      if (res.status !== 200) throw res.statusText;
       res.json().then((data) => {
         if (!data.success) return data.data;
+        localStorage.setItem("harmony_peer_token", data.data);
         if (typeof callback === "function") callback(data.data);
       });
     })

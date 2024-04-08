@@ -1,15 +1,18 @@
 import App from './components/App';
 import VideoChat from './pages/VideoChat';
+import VideoCall from "./pages/video-call/VideoCallPage";
 import Login from './pages/Login';
 import Register from './pages/Register';
 import FileManagement from './pages/file-management/FileManagement';
+import FileManagementPage from "./pages/file-management/FileManagementPage";
 import GroupDashboard from './pages/group-dashboard/GroupDashboard';
 import PersonalDashboard from './pages/personal-dashboard/PersonalDashboard';
 import Groups from './pages/groups/Groups'
 import { createBrowserRouter } from 'react-router-dom';
+
 export default createBrowserRouter([
   {
-    path: '/',
+    path: "/",
     element: <App />,
     errorElement: (
       <div>
@@ -29,33 +32,37 @@ export default createBrowserRouter([
             element: <PersonalDashboard/>,
           },
           {
-            path: '/files',
-            element: <FileManagement />,
+            path: "/files",
+            element: <FileManagementPage />,
           },
           {
-            path: '/video',
-            element: <VideoChat />,
+            path: "/video",
+            element: <VideoCall />,
           },
           {
-            path: '/login',
+            path: "/login",
             element: <Login />,
           },
           {
-            path: '/register',
+            path: "/register",
             element: <Register />,
           },
           {
-            path: '/group/:group',
+            path: "/group/:group",
             element: <GroupDashboard />,
           },
           {
             path: '/groups',
             element: <Groups />,
           },
+          {
+            path: "/personalDashboard",
+            element: <PersonalDashboard />,
+          },
         ],
       },
       {
-        path: '*',
+        path: "*",
         element: (
           <div>
             Page does not exist

@@ -133,9 +133,10 @@ function DashboardMessages({date, setDate, messages, setMessages, groupName}) {
       };
 
     return (
-        <div className="chat xl:me-3 w-full">
-          <div className="chatbox border border-input rounded-lg px-4 xl:px-8 py-6 gap-4 mb-3">
-            <div className="chatbox--header flex items-center mb-4">
+        
+        <div className="chat xl:me-3 w-full h-full flex flex-col">
+          <div className="chatbox border border-input rounded-lg px-4 xl:px-8 py-6 gap-4 mb-3 grow flex flex-col">
+            <div className="chatbox--header flex items-center">
                 <h1 className="font-semibold text-xl sm:text-2xl xl:text-3xl me-auto">
                   <GroupMembers groupName={groupName} />
                 </h1>
@@ -152,7 +153,7 @@ function DashboardMessages({date, setDate, messages, setMessages, groupName}) {
                 </Dialog>
               </div>
             </div>
-            <div className="chat-messages overflow-y-auto h-[50vh] custom-scrollbar">
+            <div className="chat-messages overflow-y-auto h-[50vh] custom-scrollbar grow">
               {messages.map((message, index) => (
                 <Message
                   key={index}
