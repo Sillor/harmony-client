@@ -18,7 +18,6 @@ const GoogleCalendar = () => {
 
   const [srcId, setSrcId] = React.useState('harmonyapp2024%40gmail.com')
 
-
   let [calendars, setCalendars] = useState([
     {
       "name": "harmonyapp2024@gmail.com",
@@ -43,7 +42,6 @@ const GoogleCalendar = () => {
   }, []);
   const sortedCalendars = [...calendars].sort((a, b) => a.name.localeCompare(b.name));
 
-
   useEffect(() => {
     const selectedCalendar = calendars.find(calendar => calendar.name === groupName);
     if (selectedCalendar) {
@@ -51,15 +49,10 @@ const GoogleCalendar = () => {
     }
   }, [groupName, calendars]);
   
-  
-
   const src = calendars.length > 0 ? `https://calendar.google.com/calendar/embed?src=${srcId}%40group.calendar.google.com&ctz=America%2FLos_Angeles` : '';
-
-
 
   return (
     <div className='flex justify-center flex-col'>
-      
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button style={{ width: '80vw'}} className='bg-black text-white dark:bg-gray-700 mb-2'>Select Calendar</Button>
@@ -72,7 +65,6 @@ const GoogleCalendar = () => {
             </DropdownMenuRadioGroup>
           </DropdownMenuContent>
         </DropdownMenu>
-      
       <iframe
         className='border-double border-8 border-black dark:border-gray-700 rounded-lg'
         src={src}
