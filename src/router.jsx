@@ -1,5 +1,4 @@
 import App from './components/App';
-import VideoChat from './pages/VideoChat';
 import VideoCall from "./pages/video-call/VideoCallPage";
 import Login from './pages/Login';
 import Register from './pages/Register';

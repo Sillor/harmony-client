@@ -7,22 +7,21 @@ import {
     TableHead,
     TableHeader,
     TableRow,
-  } from "@/components/ui/table"
+} from "@/components/ui/table"
 
-  import {
+import {
     Card,
     CardContent,
     CardDescription,
     CardFooter,
     CardHeader,
     CardTitle,
-  } from "@/components/ui/card"
-import { CheckIcon } from "lucide-react";
-import { XIcon } from "lucide-react";
+} from "@/components/ui/card"
 
+import axios from 'axios';
 import CreateTeamDialog from "./CreateTeamDialog";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const Groups = () => {
 
@@ -34,21 +33,36 @@ const Groups = () => {
             name: 'group1',
             owner: 'Joe Blow',
             memberCount: 2,
-            isJoined: true
         },
         {
             name: 'group2',
             owner: 'Moe Snow',
             memberCount: 3,
-            isJoined: false
         },
         {
             name: 'group3',
             owner: 'Mikey Stone',
             memberCount: 5,
-            isJoined: true
         }
     ]
+
+let [groupData, setGroupData] = useState([])
+
+useEffect(() => {
+    axios.get('http://localhost:5001/loadJoinedTeams', {
+        withCredentials: true,
+    })
+    .then(response => {
+        console.log('raw response:',response);
+        console.log('data response:',response.data.data);
+
+        setGroupData(response.data.data)
+
+    })
+        .catch(error => {
+        console.error('Error loading teams:', error);
+    });
+}, []);
 
   return (
     <>
@@ -61,19 +75,17 @@ const Groups = () => {
                 <Table className="">
                     <TableHeader>
                         <TableRow>
-                            <TableHead>Group Name</TableHead>
-                            <TableHead>Group Owner</TableHead>
-                            <TableHead>Number of Members</TableHead>
-                            <TableHead>Joined?</TableHead>
+                            <TableHead>Team Name</TableHead>
+                            <TableHead>Owned?</TableHead>
+                            
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        {groupsList.map((group, index) => (
+                        {console.log('jsx:',groupData)}
+                        {groupData.length > 0 && groupData.map((group, index) => (
                             <TableRow key={index}>
                                 <TableCell className="font-medium"><a className="text-blue-500" href={`/group/${group.name}`}>{group.name}</a></TableCell>
-                                <TableCell>{group.owner}</TableCell>
-                                <TableCell>{group.memberCount}</TableCell>
-                                <TableCell className="">{group.isJoined ? <CheckIcon /> : <XIcon />}</TableCell>
+                                <TableCell>{group.owned ? 'Yes' : 'No'}</TableCell>
                             </TableRow>
                         ))}
                     </TableBody>

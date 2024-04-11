@@ -28,7 +28,7 @@ const links = [
   {
     icon: <UsersIcon className="mr-2 h-6 w-6 text-black dark:text-white"/>,
     name: "Groups",
-    path: "/group"
+    path: "/groups"
   },
   {
     icon: <FilesIcon className="mr-2 h-6 w-6 text-black dark:text-white"/>,
