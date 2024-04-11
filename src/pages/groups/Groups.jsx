@@ -28,24 +28,6 @@ const Groups = () => {
     const [groupName, setGroupName] = useState("");
     const [groupOwner, setGroupOwner] = useState("");
 
-    const groupsList = [
-        {
-            name: 'group1',
-            owner: 'Joe Blow',
-            memberCount: 2,
-        },
-        {
-            name: 'group2',
-            owner: 'Moe Snow',
-            memberCount: 3,
-        },
-        {
-            name: 'group3',
-            owner: 'Mikey Stone',
-            memberCount: 5,
-        }
-    ]
-
 let [groupData, setGroupData] = useState([])
 
 useEffect(() => {
@@ -53,9 +35,6 @@ useEffect(() => {
         withCredentials: true,
     })
     .then(response => {
-        console.log('raw response:',response);
-        console.log('data response:',response.data.data);
-
         setGroupData(response.data.data)
 
     })
@@ -77,11 +56,9 @@ useEffect(() => {
                         <TableRow>
                             <TableHead>Team Name</TableHead>
                             <TableHead>Owned?</TableHead>
-                            
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        {console.log('jsx:',groupData)}
                         {groupData.length > 0 && groupData.map((group, index) => (
                             <TableRow key={index}>
                                 <TableCell className="font-medium"><a className="text-blue-500" href={`/group/${group.name}`}>{group.name}</a></TableCell>
