@@ -20,16 +20,14 @@ import { register } from "../utils/db";
 
 const Register = () => {
   const [inputData, setInputData] = useState({
-    firstName: "",
-    lastName: "",
+    username: "",
     email: "",
     password: "",
     confirmPassword: "",
   });
 
   const [errors, setErrors] = useState({
-    firstName: null,
-    lastName: null,
+    username: null,
     email: null,
     password: null,
     confirmPassword: null,
@@ -42,14 +40,12 @@ const Register = () => {
 
   const [isPasswordMatch, setIsPasswordMatch] = useState(null);
   const [isHiddenPassword, setIsHiddenPassword] = useState(true);
-  const [isHiddenConfirmPassword, setIsHiddenConfirmPassword] = useState(true);
+  const [serverResponse, setServerResponse] = useState(null);
+
+  const navigate = useNavigate();
 
   const handlePasswordVisibility = () => {
     setIsHiddenPassword((prev) => !prev);
-  };
-
-  const handleConfirmPasswordVisibility = () => {
-    setIsHiddenConfirmPassword((prev) => !prev);
   };
 
   const handleOnChange = (event) => {
@@ -57,10 +53,6 @@ const Register = () => {
       ...prev,
       [event.target.name]: event.target.value,
     }));
-  };
-
-  const handlePasswordOnChange = (event) => {
-    setCheckedPassword(checkValidPassword(event.target.value));
   };
 
   const handleSubmit = (event) => {
@@ -73,21 +65,24 @@ const Register = () => {
       setErrors((prev) => ({ ...prev, [field]: value ? false : true }));
     });
 
+    setCheckedPassword(checkValidPassword(inputData.password));
+
     inputData.password !== inputData.confirmPassword
       ? setIsPasswordMatch(false)
       : setIsPasswordMatch(true);
+
+    setServerResponse(null);
   };
 
-  const finishSubmit = () => {
-    register({ email: inputData.email, password: inputData.password }).then(
-      (data) => {
-        if (!data.success) {
-          setLoginError(data.message);
-          return;
-        }
-        navigate("/");
-      }
-    );
+  const finishSubmit = async () => {
+    const data = await register(inputData.username, inputData.email, inputData.password);
+    setServerResponse({ error: !data.success, message: data.message });
+
+    if (!data.success) {
+      return;
+    }
+
+    navigate("/");
   };
 
   useEffect(() => {
@@ -115,40 +110,22 @@ const Register = () => {
         <CardContent className="pb-3">
           <form onSubmit={(event) => handleSubmit(event)}>
             <div className="grid w-full items-center gap-4">
-              {/* First name */}
+              {/* Username */}
               <div className="flex flex-col space-y-1.5">
-                <Label htmlFor="firstName">First Name</Label>
+                <Label htmlFor="username">Username</Label>
                 <Input
-                  id="firstName"
-                  name="firstName"
-                  placeholder="First Name"
+                  id="username"
+                  name="username"
+                  placeholder="Username"
                   onChange={handleOnChange}
                   className={
-                    errors.firstName && "border-red-500 dark:border-red-400"
+                    errors.username && "border-red-500 dark:border-red-400"
                   }
                 />
-                {/* Error for First Name field */}
+                {/* Error for Username field */}
                 <StatusMessage
-                  error={errors.firstName}
-                  message="First Name field is required"
-                />
-              </div>
-              {/* Last name */}
-              <div className="flex flex-col space-y-1.5">
-                <Label htmlFor="lastName">Last Name</Label>
-                <Input
-                  id="lastName"
-                  name="lastName"
-                  placeholder="Last Name"
-                  onChange={handleOnChange}
-                  className={
-                    errors.lastName && "border-red-500 dark:border-red-400"
-                  }
-                />
-                {/* Error for Last Name field */}
-                <StatusMessage
-                  error={errors.lastName}
-                  message="Last Name field is required"
+                  error={errors.username}
+                  message="Username field is required"
                 />
               </div>
               {/* Email */}
@@ -161,7 +138,7 @@ const Register = () => {
                   placeholder="Email"
                   onChange={handleOnChange}
                   className={
-                    errors.email && "border-red-500 dark:border-red-400"
+                    (errors.email || serverResponse?.error) && "border-red-500 dark:border-red-400"
                   }
                 />
                 {/* Error for Email field */}
@@ -169,6 +146,7 @@ const Register = () => {
                   error={errors.email}
                   message="Email field is required"
                 />
+                <StatusMessage error={serverResponse?.error} message={serverResponse?.message} />
               </div>
               {/* Password */}
               <div className="flex flex-col space-y-1.5">
@@ -179,12 +157,9 @@ const Register = () => {
                     id="password"
                     name="password"
                     placeholder="Password"
-                    onChange={(event) => {
-                      handleOnChange(event);
-                      handlePasswordOnChange(event);
-                    }}
+                    onChange={handleOnChange}
                     className={
-                      errors.password || isPasswordMatch === false
+                      (errors.password || isPasswordMatch === false || checkedPassword.error)
                         ? "border-red-500 dark:border-red-400 pr-10"
                         : "pr-10"
                     }
@@ -205,7 +180,7 @@ const Register = () => {
                 <Label htmlFor="confirmPassword">Confirm Password</Label>
                 <div className="relative">
                   <Input
-                    type={isHiddenConfirmPassword ? "password" : "text"}
+                    type={isHiddenPassword ? "password" : "text"}
                     id="confirmPassword"
                     name="confirmPassword"
                     placeholder="Confirm Password"
@@ -217,8 +192,8 @@ const Register = () => {
                     }
                   />
                   <PasswordVisibilityToggle
-                    isHidden={isHiddenConfirmPassword}
-                    handleToggle={handleConfirmPasswordVisibility}
+                    isHidden={isHiddenPassword}
+                    handleToggle={handlePasswordVisibility}
                   />
                 </div>
                 {/* Error for Confirm Password field */}

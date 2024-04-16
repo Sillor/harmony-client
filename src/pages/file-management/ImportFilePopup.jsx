@@ -14,7 +14,8 @@ import { PlusIcon } from "@radix-ui/react-icons";
 import { useState } from "react";
 import formatFileSize from "../../utils/formatFileSIze";
 import { DialogClose } from "@radix-ui/react-dialog";
-
+import { fileUpload } from "../../utils/fileManagement";
+import { useParams } from "react-router-dom";
 /**
  * @callback FileCallback
  * @param {File} file
@@ -27,6 +28,8 @@ import { DialogClose } from "@radix-ui/react-dialog";
  */
 export default function ImportFilePopup({ onFile }) {
   const [file, setFile] = useState(null);
+  let {chatId} = useParams();
+
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -86,6 +89,7 @@ export default function ImportFilePopup({ onFile }) {
               <Button
                 type="submit"
                 onClick={() => {
+                  fileUpload(file, chatId);
                   onFile && onFile(file);
                   setFile(null);
                 }}

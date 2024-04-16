@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
 import {
   ChevronDownIcon,
   ArrowLeftIcon,
@@ -32,44 +33,7 @@ import {
 import ImportFilePopup from "./ImportFilePopup";
 
 import columns from "./columns";
-
-const placeholderData = [
-  {
-    id: "m5gr84i9",
-    title: "file-name1.txt",
-    type: "file",
-    size: "14B",
-    date: 639873769520,
-  },
-  {
-    id: "3u1reuv4",
-    title: "file-name2.txt",
-    type: "file",
-    size: "14B",
-    date: 654454802939,
-  },
-  {
-    id: "derv1ws0",
-    title: "file-name3.txt",
-    type: "file",
-    size: "14B",
-    date: 1597008670714,
-  },
-  {
-    id: "5kma53ae",
-    title: "projects",
-    type: "Folder",
-    size: "26M",
-    date: 1272290725140,
-  },
-  {
-    id: "bhqecj4p",
-    title: "file-name5.txt",
-    type: "file",
-    size: "14B",
-    date: 1350577804495,
-  }
-];
+import { fetchFileList } from "../../utils/fileManagement";
 
 export default function FileManagement() {
   const [sorting, setSorting] = useState([]);
@@ -77,8 +41,10 @@ export default function FileManagement() {
   const [columnVisibility, setColumnVisibility] = useState({});
   const [rowSelection, setRowSelection] = useState({});
 
+  const [fileData, setFileData] = useState({});
+  const [tableData, setTableData] = useState([]);
   const table = useReactTable({
-    data: placeholderData,
+    data: tableData,
     columns,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
@@ -96,6 +62,34 @@ export default function FileManagement() {
     },
   });
 
+  let {chatId} = useParams();
+
+  //obtain directory file
+  useEffect(() => {
+      fetchFileList(chatId).then(json => {
+        setFileData(json);
+
+      });
+  }, []);
+
+  //format fileData to be used as tableData 
+  useEffect(() => {
+      let emptyArray = [];
+      for(let i in fileData.files){
+        let type = fileData.files[i].name.split(".")[1] || 'folder'
+        
+        emptyArray.push({
+          title: fileData.files[i].name,
+          size: fileData.properties[i].size,
+          date: fileData.properties[i].birthtimeMs,
+          type: type,
+          key: `key${i}`
+        })
+      }
+
+      setTableData(emptyArray)
+  }, [fileData])
+  
   return (
     <div className="w-full h-full flex flex-col grow overflow-auto">
       <div className="flex items-center gap-6">
@@ -110,6 +104,15 @@ export default function FileManagement() {
         <span className="underline px-1 cursor-pointer">main</span>
         <span>/</span>
         <span className="underline px-1 cursor-pointer">src</span>
+        <span>/</span>
+        {
+          fileData.dirName && 
+          <>
+            <span className="underline px-1 cursor-pointer">{fileData.dirName[0]}</span>
+            <span>/</span>
+            <span className="underline px-1 cursor-pointer">{fileData.dirName[1]}</span>
+          </>
+        }
       </span>
       <div className="flex items-center py-4 gap-3">
         <Input
@@ -146,7 +149,11 @@ export default function FileManagement() {
               })}
           </DropdownMenuContent>
         </DropdownMenu>
-        <ImportFilePopup onFile={(file) => console.log("get file", file)} />
+        <ImportFilePopup onFile={() => {
+            fetchFileList(chatId).then(json => {
+              setFileData(json);
+            });
+          }} />
       </div>
       <div className="grow overflow-auto">
         <div className="rounded-md border border-input max-h-full overflow-auto">
