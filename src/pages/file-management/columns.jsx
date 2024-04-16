@@ -17,6 +17,8 @@ import {
   DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
 
+import { useParams } from "react-router-dom";
+import {fileDelete, fileDuplicate, fileDownload} from '../../utils/fileManagement'
 export default [
   {
     id: "select",
@@ -63,7 +65,7 @@ export default [
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Date
+          Date Created
           <CaretSortIcon className="ml-2 h-4 w-4" />
         </Button>
       );
@@ -119,7 +121,8 @@ export default [
     enableHiding: false,
     cell: ({ row }) => {
       const payment = row.original;
-
+      let params = useParams();
+      let chatId = params.chatId;
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -133,19 +136,32 @@ export default [
               <Pencil1Icon />
               <div className="ps-2">Rename</div>
             </DropdownMenuItem>
-            <DropdownMenuItem>
+            <DropdownMenuItem 
+              onClick={e => {
+                fileDownload(e, chatId, row.getValue("title"))
+                }}>
               <DownloadIcon />
-              <div className="ps-2">Save</div>
+              <div className="ps-2">Save
+              </div>
             </DropdownMenuItem>
-            <DropdownMenuItem>
+            <DropdownMenuItem 
+              onClick={e => {
+                fileDuplicate(e, chatId, row.getValue("title"))
+                window.location.reload();
+                }}>
               <CopyIcon />
-              <div className="ps-2">Duplicate</div>
+              <div className="ps-2" >Duplicate
+              </div>
             </DropdownMenuItem>
             <DropdownMenuItem>
               <Share1Icon />
               <div className="ps-2">Share</div>
             </DropdownMenuItem>
-            <DropdownMenuItem className="text-red-500 focus:text-red-500">
+            <DropdownMenuItem className="text-red-500 focus:text-red-500" 
+              onClick={e => {
+                fileDelete(e, chatId, row.getValue("title"))
+                window.location.reload();
+                }}>
               <TrashIcon />
               <div className="ps-2">Delete</div>
             </DropdownMenuItem>

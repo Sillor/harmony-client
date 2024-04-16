@@ -16,21 +16,27 @@ export default function ThemeSwitcher() {
       </PopoverTrigger>
       <PopoverContent className="w-auto border-input">
         <div className="flex flex-col w-20 gap-1">
-          <PopoverClose asChild>
-            <Button className="w-full" variant="secondary" onClick={()=>setTheme("light")}>
-              Light
-            </Button>
-          </PopoverClose>
-          <PopoverClose asChild>
-            <Button className="w-full" variant="secondary" onClick={()=>setTheme("dark")}>
-              Dark
-            </Button>
-          </PopoverClose>
-          <PopoverClose asChild>
-            <Button className="w-full" variant="secondary" onClick={()=>setTheme("os")}>
-              OS
-            </Button>
-          </PopoverClose>
+          <Button
+            className="w-full"
+            variant="secondary"
+            onClick={() => setTheme("light")}
+          >
+            Light
+          </Button>
+          <Button
+            className="w-full"
+            variant="secondary"
+            onClick={() => setTheme("dark")}
+          >
+            Dark
+          </Button>
+          <Button
+            className="w-full"
+            variant="secondary"
+            onClick={() => setTheme("os")}
+          >
+            OS
+          </Button>
         </div>
       </PopoverContent>
     </Popover>

@@ -15,8 +15,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useEffect, useState } from "react";
-import isMobileDevice from "../utils/isMobileDevice";
-import { peer } from "../utils/globals.js";
+import isMobileDevice from "../../utils/isMobileDevice.js";
+import { peer } from "../../utils/globals.js";
 
 export default function VideoSelector({ triggerButton, onStream }) {
   const [mediaDevices, setMediaDevices] = useState([]);
@@ -33,7 +33,11 @@ export default function VideoSelector({ triggerButton, onStream }) {
   }, []);
 
   function getStreams() {
-    return {myStream: true, display: peer.myStreams.has("screen"), camera: peer.myStreams.has("camera")}
+    return {
+      myStream: true,
+      display: peer.myStreams.has("screen"),
+      camera: peer.myStreams.has("camera"),
+    };
   }
 
   function handleSelectDisplayClick() {
@@ -63,7 +67,7 @@ export default function VideoSelector({ triggerButton, onStream }) {
 
   function handleSelectCameraClick() {
     if (streams.camera) {
-      peer.stopCamera()
+      peer.stopCamera();
       setStreams(getStreams());
       if (typeof onStream === "function") onStream();
       return;
@@ -82,12 +86,12 @@ export default function VideoSelector({ triggerButton, onStream }) {
       .then((stream) => {
         stream.getTracks().forEach((track) => {
           track.addEventListener("ended", () => {
-            peer.stopCamera()
+            peer.stopCamera();
             setStreams(getStreams());
             if (typeof onStream === "function") onStream();
           });
         });
-        peer.startCamera(stream)
+        peer.startCamera(stream);
         setStreams(getStreams());
         if (typeof onStream === "function") onStream();
       })
@@ -156,7 +160,9 @@ export default function VideoSelector({ triggerButton, onStream }) {
               </SelectContent>
             </Select>
             <Button
-              disabled={!hasPermission || selectedCamera === null || !peer.roomId}
+              disabled={
+                !hasPermission || selectedCamera === null || !peer.roomId
+              }
               className={`mt-5 ${streams.camera && "text-red-600"}`}
               onClick={handleSelectCameraClick}
             >

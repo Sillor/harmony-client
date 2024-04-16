@@ -7,10 +7,27 @@ import GroupDashboard from './pages/group-dashboard/GroupDashboard';
 import PersonalDashboard from './pages/personal-dashboard/PersonalDashboard';
 import GoogleCalendar from './pages/GoogleCalendar';
 import Groups from './pages/Groups'
-import { createBrowserRouter } from 'react-router-dom';
+import VideoCall from "./pages/video-call/VideoCallPage";
+import FileManagementPage from "./pages/file-management/FileManagementPage";
+import Profile from "./pages/profile/Profile";
+import { createBrowserRouter, redirect } from "react-router-dom";
+import { checkLoggedIn } from './utils/db';
+
+const redirectToLogin = () => {
+  const isLoggedIn = checkLoggedIn();
+  if (isLoggedIn) return null;
+  return redirect("/login");
+}
+
+const redirectToDashboard = () => {
+  const isLoggedIn = checkLoggedIn();
+  if (isLoggedIn) return redirect("/personalDashboard");
+  return null;
+}
+
 export default createBrowserRouter([
   {
-    path: '/',
+    path: "/",
     element: <App />,
     errorElement: (
       <div>
@@ -28,26 +45,47 @@ export default createBrowserRouter([
           {
             index: true,
             element: <PersonalDashboard/>,
+            loader: () => {
+              const isLoggedIn = checkLoggedIn();
+              if (isLoggedIn) return redirect("/personalDashboard");
+              return redirect("/login");
+             },
+            element: <div>Welcome to Harmony!</div>,
           },
           {
-            path: '/files',
-            element: <FileManagement />,
+            path: "/files/:chatId?",
+            element: <FileManagementPage />,
+            loader: redirectToLogin
           },
           {
-            path: '/video',
-            element: <VideoChat />,
+            path: "/video",
+            element: <VideoCall />,
+            loader: redirectToLogin
           },
           {
-            path: '/login',
+            path: "/login",
             element: <Login />,
+            loader: redirectToDashboard
           },
           {
-            path: '/register',
+            path: "/register",
             element: <Register />,
+            loader: redirectToDashboard
           },
           {
-            path: '/group/:group',
+            path: "/profile",
+            element: <Profile />,
+            loader: redirectToLogin
+          },
+          {
+            path: "/group/:group",
             element: <GroupDashboard />,
+            loader: redirectToLogin
+          },
+          {
+            path: "/personalDashboard",
+            element: <PersonalDashboard />,
+            loader: redirectToLogin
           },
           {
             path: '/groups',
@@ -60,7 +98,7 @@ export default createBrowserRouter([
         ],
       },
       {
-        path: '*',
+        path: "*",
         element: (
           <div>
             Page does not exist

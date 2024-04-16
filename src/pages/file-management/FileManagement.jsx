@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
 import {
   ChevronDownIcon,
   ArrowLeftIcon,
@@ -32,46 +33,7 @@ import {
 import ImportFilePopup from "./ImportFilePopup";
 
 import columns from "./columns";
-
-const placeholderData = [
-  {
-    id: "m5gr84i9",
-    title: "file-name1.txt",
-    type: "file",
-    size: "14B",
-    date: 639873769520,
-  },
-  {
-    id: "3u1reuv4",
-    title: "file-name2.txt",
-    type: "file",
-    size: "14B",
-    date: 654454802939,
-  },
-  {
-    id: "derv1ws0",
-    title: "file-name3.txt",
-    type: "file",
-    size: "14B",
-    date: 1597008670714,
-  },
-  {
-    id: "5kma53ae",
-    title: "projects",
-    type: "Folder",
-    size: "26M",
-    date: 1272290725140,
-  },
-  {
-    id: "bhqecj4p",
-    title: "file-name5.txt",
-    type: "file",
-    size: "14B",
-    date: 1350577804495,
-  }
-];
-
-
+import { fetchFileList } from "../../utils/fileManagement";
 
 export default function FileManagement() {
   const [sorting, setSorting] = useState([]);
@@ -79,8 +41,10 @@ export default function FileManagement() {
   const [columnVisibility, setColumnVisibility] = useState({});
   const [rowSelection, setRowSelection] = useState({});
 
+  const [fileData, setFileData] = useState({});
+  const [tableData, setTableData] = useState([]);
   const table = useReactTable({
-    data: placeholderData,
+    data: tableData,
     columns,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
@@ -98,8 +62,36 @@ export default function FileManagement() {
     },
   });
 
+  let {chatId} = useParams();
+
+  //obtain directory file
+  useEffect(() => {
+      fetchFileList(chatId).then(json => {
+        setFileData(json);
+
+      });
+  }, []);
+
+  //format fileData to be used as tableData 
+  useEffect(() => {
+      let emptyArray = [];
+      for(let i in fileData.files){
+        let type = fileData.files[i].name.split(".")[1] || 'folder'
+        
+        emptyArray.push({
+          title: fileData.files[i].name,
+          size: fileData.properties[i].size,
+          date: fileData.properties[i].birthtimeMs,
+          type: type,
+          key: `key${i}`
+        })
+      }
+
+      setTableData(emptyArray)
+  }, [fileData])
+  
   return (
-    <div className="w-full md:w-4/5 px-5 md:px-0">
+    <div className="w-full h-full flex flex-col grow overflow-auto">
       <div className="flex items-center gap-6">
         <div className="text-3xl font-semibold">bun-bunnies</div>
         <div className="inline [&>svg]:inline [&>svg]:me-2 [&>svg]:h-6 [&>svg]:w-6">
@@ -112,6 +104,15 @@ export default function FileManagement() {
         <span className="underline px-1 cursor-pointer">main</span>
         <span>/</span>
         <span className="underline px-1 cursor-pointer">src</span>
+        <span>/</span>
+        {
+          fileData.dirName && 
+          <>
+            <span className="underline px-1 cursor-pointer">{fileData.dirName[0]}</span>
+            <span>/</span>
+            <span className="underline px-1 cursor-pointer">{fileData.dirName[1]}</span>
+          </>
+        }
       </span>
       <div className="flex items-center py-4 gap-3">
         <Input
@@ -148,63 +149,69 @@ export default function FileManagement() {
               })}
           </DropdownMenuContent>
         </DropdownMenu>
-        <ImportFilePopup onFile={(file) => console.log("get file", file)} />
+        <ImportFilePopup onFile={() => {
+            fetchFileList(chatId).then(json => {
+              setFileData(json);
+            });
+          }} />
       </div>
-      <div className="rounded-md border border-input">
-        <Table>
-          <TableHeader>
-            {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id} className="border-input">
-                {headerGroup.headers.map((header) => {
-                  return (
-                    <TableHead
-                      key={header.id}
-                      className="has-[button:not([role='checkbox'])]:px-0"
-                    >
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
-                    </TableHead>
-                  );
-                })}
-              </TableRow>
-            ))}
-          </TableHeader>
-          <TableBody>
-            {table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((row) => (
-                <TableRow
-                  key={row.id}
-                  data-state={row.getIsSelected() && "selected"}
-                  className="border-input"
-                >
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
-                    </TableCell>
-                  ))}
+      <div className="grow overflow-auto">
+        <div className="rounded-md border border-input max-h-full overflow-auto">
+          <Table className="overflow-auto">
+            <TableHeader>
+              {table.getHeaderGroups().map((headerGroup) => (
+                <TableRow key={headerGroup.id} className="border-input">
+                  {headerGroup.headers.map((header) => {
+                    return (
+                      <TableHead
+                        key={header.id}
+                        className="has-[button:not([role='checkbox'])]:px-0"
+                      >
+                        {header.isPlaceholder
+                          ? null
+                          : flexRender(
+                              header.column.columnDef.header,
+                              header.getContext()
+                            )}
+                      </TableHead>
+                    );
+                  })}
                 </TableRow>
-              ))
-            ) : (
-              <TableRow>
-                <TableCell
-                  colSpan={columns.length}
-                  className="h-24 text-center"
-                >
-                  No results.
-                </TableCell>
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
+              ))}
+            </TableHeader>
+            <TableBody className="overflow-auto">
+              {table.getRowModel().rows?.length ? (
+                table.getRowModel().rows.map((row) => (
+                  <TableRow
+                    key={row.id}
+                    data-state={row.getIsSelected() && "selected"}
+                    className="border-input"
+                  >
+                    {row.getVisibleCells().map((cell) => (
+                      <TableCell key={cell.id}>
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext()
+                        )}
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell
+                    colSpan={columns.length}
+                    className="h-24 text-center"
+                  >
+                    No results.
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </div>
       </div>
-      <div className="flex items-center justify-end space-x-2 py-4">
+      <div className="flex items-center justify-end space-x-2 pt-4">
         <div className="flex-1 text-sm text-muted-foreground">
           {table.getFilteredSelectedRowModel().rows.length} of{" "}
           {table.getFilteredRowModel().rows.length} row(s) selected.
