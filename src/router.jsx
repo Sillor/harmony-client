@@ -1,5 +1,4 @@
 import App from './components/App';
-import VideoChat from './pages/VideoChat';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import FileManagement from './pages/file-management/FileManagement';
@@ -50,7 +49,6 @@ export default createBrowserRouter([
               if (isLoggedIn) return redirect("/personalDashboard");
               return redirect("/login");
              },
-            element: <div>Welcome to Harmony!</div>,
           },
           {
             path: "/files/:chatId?",
