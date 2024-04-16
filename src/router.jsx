@@ -47,6 +47,7 @@ export default createBrowserRouter([
               const isLoggedIn = checkLoggedIn();
               if (isLoggedIn) return redirect("/personalDashboard");
               return redirect("/login");
+            },
           },
           {
             path: "/files/:chatId?",

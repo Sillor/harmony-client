@@ -11,25 +11,8 @@ import {
 import { Button } from "@/components/ui/button"
 import { HomeIcon, ChatBubbleIcon, CalendarIcon, HamburgerMenuIcon } from "@radix-ui/react-icons"
 import { CircleUserRoundIcon, FilesIcon, LayoutDashboardIcon, LogOutIcon, UsersIcon, WebcamIcon } from "lucide-react"
-import { Link } from "react-router-dom"
 import { logout } from "../utils/db"
-
-import { Button } from "@/components/ui/button";
-import {
-  HomeIcon,
-  ChatBubbleIcon,
-  CalendarIcon,
-  HamburgerMenuIcon,
-} from "@radix-ui/react-icons";
-import {
-  CircleUserRoundIcon,
-  FilesIcon,
-  LayoutDashboardIcon,
-  LogOutIcon,
-  UsersIcon,
-} from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
-import { logout } from "../utils/db";
 import { checkLoggedIn } from "../utils/db";
 
 const links = [
