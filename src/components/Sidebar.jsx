@@ -1,29 +1,18 @@
 import {
-  Drawer,
-  DrawerClose,
-  DrawerContent,
-  DrawerDescription,
-  DrawerFooter,
-  DrawerHeader,
-  DrawerTitle,
-  DrawerTrigger,
-} from "@/components/ui/drawer";
-import { Button } from "@/components/ui/button";
-import {
-  HomeIcon,
-  ChatBubbleIcon,
-  CalendarIcon,
-  HamburgerMenuIcon,
-} from "@radix-ui/react-icons";
-import {
-  CircleUserRoundIcon,
-  FilesIcon,
-  LayoutDashboardIcon,
-  LogOutIcon,
-  UsersIcon,
-} from "lucide-react";
+    Drawer,
+    DrawerClose,
+    DrawerContent,
+    DrawerDescription,
+    DrawerFooter,
+    DrawerHeader,
+    DrawerTitle,
+    DrawerTrigger,
+  } from "@/components/ui/drawer"
+import { Button } from "@/components/ui/button"
+import { HomeIcon, ChatBubbleIcon, CalendarIcon, HamburgerMenuIcon } from "@radix-ui/react-icons"
+import { CircleUserRoundIcon, FilesIcon, LayoutDashboardIcon, LogOutIcon, UsersIcon, WebcamIcon } from "lucide-react"
+import { logout } from "../utils/db"
 import { Link, useNavigate } from "react-router-dom";
-import { logout } from "../utils/db";
 import { checkLoggedIn } from "../utils/db";
 
 const links = [
@@ -44,7 +33,7 @@ const links = [
   {
     icon: <UsersIcon className="mr-2 h-6 w-6 text-black dark:text-white" />,
     name: "Groups",
-    path: "/group"
+    path: "/groups"
   },
   {
     icon: <FilesIcon className="mr-2 h-6 w-6 text-black dark:text-white" />,
@@ -64,6 +53,7 @@ const links = [
     path: "/profile"
   },
   {
+    icon: <WebcamIcon className="mr-2 h-6 w-6 text-black dark:text-white"/>,
     name: "Video Chat",
     path: "/video"
   },
