@@ -1,11 +1,14 @@
-import App from "./components/App";
+import App from './components/App';
+import Login from './pages/Login';
+import Register from './pages/Register';
+import FileManagement from './pages/file-management/FileManagement';
+import GroupDashboard from './pages/group-dashboard/GroupDashboard';
+import PersonalDashboard from './pages/personal-dashboard/PersonalDashboard';
+import GoogleCalendar from './pages/GoogleCalendar';
+import Groups from './pages/Groups'
 import VideoCall from "./pages/video-call/VideoCallPage";
-import Login from "./pages/Login";
-import Register from "./pages/Register";
 import FileManagementPage from "./pages/file-management/FileManagementPage";
 import Profile from "./pages/profile/Profile";
-import GroupDashboard from "./pages/group-dashboard/GroupDashboard";
-import PersonalDashboard from "./pages/personal-dashboard/PersonalDashboard";
 import { createBrowserRouter, redirect } from "react-router-dom";
 import { checkLoggedIn } from './utils/db';
 
@@ -40,12 +43,12 @@ export default createBrowserRouter([
         children: [
           {
             index: true,
+            element: <PersonalDashboard/>,
             loader: () => {
               const isLoggedIn = checkLoggedIn();
               if (isLoggedIn) return redirect("/personalDashboard");
               return redirect("/login");
-            },
-            element: <div>Welcome to Harmony!</div>,
+             },
           },
           {
             path: "/files/:chatId?",
@@ -81,6 +84,14 @@ export default createBrowserRouter([
             path: "/personalDashboard",
             element: <PersonalDashboard />,
             loader: redirectToLogin
+          },
+          {
+            path: '/groups',
+            element: <Groups />,
+          },
+          {
+            path: '/calendar',
+            element: <GoogleCalendar />,
           },
         ],
       },

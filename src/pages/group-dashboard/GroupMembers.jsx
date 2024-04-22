@@ -36,9 +36,7 @@ function GroupMembers({groupName}) {
                   <DialogHeader>
                     <DialogTitle>Group Members</DialogTitle>
                     <DialogDescription>
-                        <div className="">
-                            {members.map((member) => <p key={member.id}>{member.name}</p>)}
-                        </div>
+                            {members.map((member) => <span className='display: block' key={member.id}>{member.name}</span>)}
                     </DialogDescription>
                   </DialogHeader>
                 </DialogContent>
