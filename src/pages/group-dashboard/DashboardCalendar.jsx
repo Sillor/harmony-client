@@ -52,11 +52,13 @@ async function onDeleteEvent (groupName, name, date, refetchEvents) {
 
 function Event(props) {
   return (
-    <div className="event flex items-center justify-between border-b hover:bg-secondary py-2 pe-2 group">
+    <div className="event flex items-center justify-between border-b hover:bg-secondary py-2 pe-2 group bg-white mb-3 p-2">
       <div className="event-details">
-        <h2 className="font-semibold text-sm">{props.name}</h2>
-        <p className="text-sm">{props.date.slice(0,10)} | {props.date.slice(11,16)} - {props.date.slice(20,25)}</p>
-        <p className="text-sm">{props.description}</p>
+        <h2 className="text-sm"><b>Team:</b> {props.team}</h2>
+        <h2 className="text-sm"><b>Name:</b> {props.name}</h2>
+        <p className="text-sm"><b>Start:</b> {props.start}</p>
+        <p className="text-sm"><b>End:</b> {props.end}</p>
+        <p className="text-sm"><b>Description:</b> {props.description}</p>
       </div>
       <div
         className="delete-icon opacity-0 group-hover:opacity-100 cursor-pointer"
@@ -242,11 +244,11 @@ function DashboardCalendar({date, setDate, groupName}) {
               ) : events.map((event, index) => (
                 <Event 
                   key={index} 
-                  name={event.name} 
-                  time={event.startTime ? `${convertTo12HourFormat(event.startTime)} - ${convertTo12HourFormat(event.endTime)}` : 'All Day'} 
+                  name={event.name}
+                  team={event.team} 
                   description={event.description}
-                  date={event.date}
-                  groupName={groupName}
+                  start={event.start}
+                  end={event.end}
                   refetchEvents={refetchEvents}
                 />
               ))}
