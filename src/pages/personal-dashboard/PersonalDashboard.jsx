@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
+import { DateTime } from "luxon";
 import FriendInvites from "./FriendInvites";
 import Teams from "./Teams";
 import Event from "./Event";
 import { Calendar } from "lucide-react";
+import PersonalCalendar from "./PersonalCalendar"
 import { Calendar as CustomCalendar } from "@/components/ui/calendar";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import "./PersonalDashboard.css";
@@ -132,7 +134,7 @@ function PersonalDashboard() {
                   <div className="icons flex gap-4 ">
                     <CreateTeamDialog setTeams={setTeams} />
 
-                    <Dialog>
+                    {/* <Dialog>
                       <DialogTrigger>
                         <Calendar size={24} className="xl:hidden" />
                       </DialogTrigger>
@@ -165,7 +167,7 @@ function PersonalDashboard() {
                           </div>
                         </div>
                       </DialogContent>
-                    </Dialog>
+                    </Dialog> */}
                   </div>
                 </div>
                 <div className="chat-messages h-[calc(50vh-130px)] custom-scrollbar">
@@ -228,13 +230,13 @@ function PersonalDashboard() {
             </div>
 
             <div className="utils max-w-min hidden xl:block">
-              <CustomCalendar
+              {/* <CustomCalendar
                 mode="single"
                 selected={date}
                 onSelect={setDate}
                 className="Calendar-body rounded-md border border-input h-fit mb-3 h-max"
-              />
-              <div className="day-breakdown rounded-md border border-input p-4 overflow-y-auto">
+              /> */}
+              {/* <div className="day-breakdown rounded-md border border-input p-4 overflow-y-auto">
                 <div className="flex justify-between items-center mb-3">
                   <h1 className="font-semibold text-3xl">Today</h1>
                   <button className="bg-primary text-primary-foreground hover:bg-primary/90 font-bold py-1 px-4 rounded">
@@ -246,6 +248,14 @@ function PersonalDashboard() {
                     <Event key={index} name={event.name} time={event.time} />
                   ))}
                 </div>
+              </div> */}
+              <div className="hidden xl:block">
+                <PersonalCalendar
+                  date={date}
+                  setDate={setDate}
+                  // NEED TO UPDATE THIS TO REFLECT ACTUAL TEAMS NOT PRESET TEAMS
+                  groupName={['Test Team 1', 'Test Team 3']}
+                />
               </div>
             </div>
           </div>
