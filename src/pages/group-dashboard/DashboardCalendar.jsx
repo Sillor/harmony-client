@@ -41,9 +41,9 @@ async function onDeleteEvent (groupName, name, date, refetchEvents) {
     const response = await axiosInstance.delete('/deleteevent', {
       data: { calendar: groupName, eventName: name, eventDate: date },
     })
-    // refetchEvents();
-    // console.log('Event deleted:', response.data);
-    // return response.data;
+    refetchEvents();
+    console.log('Event deleted:', response.data);
+    return response.data;
   } catch (error) {
     console.error('Error deleting event:', error);
     throw error;
@@ -60,7 +60,7 @@ function Event(props) {
       </div>
       <div
         className="delete-icon opacity-0 group-hover:opacity-100 cursor-pointer"
-        onClick={() => onDeleteEvent(props.groupName, props.name, props.refetchEvents, props.date)}
+        onClick={() => onDeleteEvent(props.groupName, props.name, props.date, props.refetchEvents)}
       >
         <X />
       </div>
