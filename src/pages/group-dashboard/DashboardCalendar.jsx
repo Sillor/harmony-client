@@ -27,7 +27,7 @@ const axiosInstance = axios.create({
   withCredentials: true
 });
 
-async function onDeleteEvent (groupName, name, date, refetchEvents) {
+async function onDeleteEvent (team, name, date, refetchEvents) {
   const isConfirmed = window.confirm('Are you sure you want to delete this event?');
   if (!isConfirmed) {
     console.log('User canceled deletion of an event.');
@@ -39,7 +39,7 @@ async function onDeleteEvent (groupName, name, date, refetchEvents) {
   
   try {
     const response = await axiosInstance.delete('/deleteevent', {
-      data: { calendar: groupName, eventName: name, eventDate: date },
+      data: { calendar: team, eventName: name, eventDate: date },
     })
     refetchEvents();
     console.log('Event deleted:', response.data);
@@ -62,7 +62,7 @@ function Event(props) {
       </div>
       <div
         className="delete-icon opacity-0 group-hover:opacity-100 cursor-pointer"
-        onClick={() => onDeleteEvent(props.groupName, props.name, props.date, props.refetchEvents)}
+        onClick={() => onDeleteEvent(props.team, props.name, props.date, props.refetchEvents)}
       >
         <X />
       </div>
