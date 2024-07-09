@@ -105,7 +105,10 @@ export async function fileDuplicate(e, chatId, fileName, fileId, fileType){
 
 export async function fileRename(e, chatId, fileName, fileId, fileType){
     let id = chatIdCheck(chatId)
-    const newFileName = prompt("Enter new file name");
+    const newFileName = prompt("Enter new file name", fileName);
+    if (newFileName === null || newFileName === ""){
+        return
+    }
     await fetch(`${url}/files/rename/${id}/${fileName}/${fileId}/${fileType}`, {
                 method: 'POST',
                 headers: {
