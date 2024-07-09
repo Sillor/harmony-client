@@ -13,12 +13,12 @@ function GroupDashboard() {
   const { group, uid } = useParams();
   const navigate = useNavigate();
 
-  // replace group1 with fetched name at some point?
   const [groupName, setGroupName] = React.useState(null);
 
   const today = DateTime.local().toISODate();
 
   const [date, setDate] = React.useState(today);
+  console.log('date var:', date);
 
   const [messages, setMessages] = useState([]);
 

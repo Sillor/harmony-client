@@ -20,20 +20,30 @@ import { Button } from '@/components/ui/button';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 
-async function onDeleteEvent (groupName, name, refetchEvents) {
 
+
+const axiosInstance = axios.create({
+  baseURL: 'http://localhost:5000/api/calendar', // Replace with your API base URL
+  withCredentials: true
+});
+
+async function onDeleteEvent (groupName, name, date, refetchEvents) {
   const isConfirmed = window.confirm('Are you sure you want to delete this event?');
   if (!isConfirmed) {
+    console.log('User canceled deletion of an event.');
     return;
+    
+  } else {
+    console.log('User confirmed deletion of an event.');
   }
-
+  
   try {
-    const response = await axios.delete('http://localhost:5000/api/calendar/deleteevent', {
-      data: { calendar: groupName, eventName: name }
+    const response = await axiosInstance.delete('/deleteevent', {
+      data: { calendar: groupName, eventName: name, eventDate: date },
     })
-    refetchEvents();
-    console.log('Event deleted:', response.data);
-    return response.data;
+    // refetchEvents();
+    // console.log('Event deleted:', response.data);
+    // return response.data;
   } catch (error) {
     console.error('Error deleting event:', error);
     throw error;
@@ -50,7 +60,7 @@ function Event(props) {
       </div>
       <div
         className="delete-icon opacity-0 group-hover:opacity-100 cursor-pointer"
-        onClick={() => onDeleteEvent(props.groupName, props.name, props.refetchEvents)}
+        onClick={() => onDeleteEvent(props.groupName, props.name, props.refetchEvents, props.date)}
       >
         <X />
       </div>
@@ -58,15 +68,15 @@ function Event(props) {
   );
 }
 
-
 function DashboardCalendar({date, setDate, groupName}) {
-
+  
   const refetchEvents = async () => {
     try {
       setEvents([]);
       if (date) {
         const formattedDate = DateTime.fromJSDate(new Date(date)).toISODate();
-        const response = await axios.get(`http://localhost:5000/api/calendar/listevents/${groupName}?date=${formattedDate}`);
+        const response = await axiosInstance.get(`/listevents/${groupName}?date=${formattedDate}`, {
+        });
         const data = response.data;
         if (Array.isArray(data)) {
           setEvents(data);
@@ -115,12 +125,12 @@ function DashboardCalendar({date, setDate, groupName}) {
   const handleFormSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:5000/api/calendar/createevent', eventForm);
+      const response = await axiosInstance.post('/createevent', eventForm);
       console.log('Event added:', response.data);
-      setEventForm({
-        calendar: groupName,
-        event: {name: '', date: '', startTime: '', endTime: '', description: ''},
-      });
+      // setEventForm({
+      //   calendar: groupName,
+      //   event: {name: '', date: '', startTime: '', endTime: '', description: ''},
+      // });
       return response.data;
     } catch (error) {
       console.error('Error adding event:', error);
@@ -135,7 +145,8 @@ function DashboardCalendar({date, setDate, groupName}) {
                 setEvents([])
                 if(date){
                 const formattedDate = DateTime.fromJSDate(new Date(date)).toISODate();
-                const response = await axios.get(`http://localhost:5000/api/calendar/listevents/${groupName}?date=${formattedDate}`)
+                const response = await axiosInstance.get(`/listevents/${groupName}?date=${formattedDate}`, {
+                })
                 const data = response.data
                 if (Array.isArray(data)) {
                   setEvents(data);
