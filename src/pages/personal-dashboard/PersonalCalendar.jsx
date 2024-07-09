@@ -13,26 +13,29 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 
-function Event(props) {
-  return (
-    <div className="event flex items-center justify-between border-b hover:bg-secondary py-2 pe-2 group">
-      <div className="event-details">
-        <h2 className="font-semibold text-sm">{props.name}</h2>
-        <p className="text-sm">{props.date.slice(0,10)} | {props.date.slice(11,16)} - {props.date.slice(20,25)}</p>
-        <p className="text-sm">{props.description}</p>
-      </div>
-      
-    </div>
-  );
-}
 
-function PersonalCalendar({date, setDate, groupName}) {
+function Event(props) {
+    console.log('date from event func:', props.date);
+    return (
+      <div className="event flex items-center justify-between border-b hover:bg-secondary py-2 pe-2 group">
+        <div className="event-details">
+          <h2 className="font-semibold text-sm">{props.name}</h2>
+          <p className="text-sm">{props.date.slice(0,10)} | {props.date.slice(11,16)} - {props.date.slice(20,25)}</p>
+          <p className="text-sm">{props.description}</p>
+        </div>
+      </div>
+    );
+  }
+
+
+function PersonalCalendar({date, setDate, teamNames}) {
+
+    console.log('date:', date);
 
     const axiosInstance = axios.create({
         baseURL: 'http://localhost:5000/api/calendar', // Replace with your API base URL
         withCredentials: true
       });
-
     const monthNames = [
         'Jan.',
         'Feb.',
@@ -47,28 +50,46 @@ function PersonalCalendar({date, setDate, groupName}) {
         'Nov.',
         'Dec.',
       ];
-
     const [events, setEvents] = useState([])
+    console.log('events:',events);
 
-    const [eventForm, setEventForm] = useState({
-        calendar: groupName,
-        event: {name: '', date: '', startTime: '', endTime: '', description: ''},
-      });
-
-    console.log('team names:',groupName);
+    console.log('team names:', teamNames);
   
+    useEffect(() => {
+        const fetchEvents = async () => {
+            const formattedDate = DateTime.fromJSDate(new Date(date)).toISODate();
+            try {
+                setEvents([])
+                const allEvents = [];
+                for (const teamName of teamNames) {
+                    const response = await axiosInstance.get(`/listevents/${teamName}?date=${formattedDate}`);
+                    const data = response.data;
+                    if (data && Array.isArray(data)) {
+                        allEvents.push(...data);
+                    } else {
+                        setEvents([]);
+                    }
+                }
+                setEvents(allEvents);
+                } catch (error) {
+                    console.error('Error:', error);
+                }
+        };
+        fetchEvents();
+    }, [date]);
+
     const refetchEvents = async () => {
         try {
             setEvents([]);
             const allEvents = [];
-            for (const groupName of groupName) {
-            const response = await axiosInstance.get(`/listevents/${groupName}?date=${formattedDate}`);
-            const data = response.data;
-            if (data && Array.isArray(data)) {
-                allEvents.push(data);
-            } else {
-                setEvents([]);
-            }
+            for (const teamName of teamNames) {
+                const response = await axiosInstance.get(`/listevents/${teamName}?date=${formattedDate}`);
+                const data = response.data;
+                if (data && Array.isArray(data)) {
+                    allEvents.push(...data);
+                } else {
+                    setEvents([]);
+                }
             }
             setEvents(allEvents);
         } catch (error) {
@@ -76,31 +97,6 @@ function PersonalCalendar({date, setDate, groupName}) {
         }
     };
 
-    useEffect(() => {
-        const fetchEvents = async () => {
-            // console.log('date:',date);
-            try {
-                // console.log('Use Effect Has Ran!');
-                setEvents([])
-                if(date){
-                const formattedDate = DateTime.fromJSDate(new Date(date)).toISODate();
-                // console.log('formatted date:', formattedDate);
-                const response = await axiosInstance.get(`/listevents/${groupName[0]}?date=${formattedDate}`, {
-                })
-                const data = response.data
-                if (Array.isArray(data)) {
-                    setEvents(data);
-                } else {
-                    setEvents([])
-                    // console.log('Data is not an array:', data);
-                }}
-            } catch (error) {
-                console.error('Error:', error);
-            }
-        };
-        fetchEvents();
-    }, [date]);
-  
     const convertTo12HourFormat = (time) => {
         const hours = parseInt(time.split(':')[0]);
         const minutes = time.split(':')[1];
@@ -130,13 +126,12 @@ function PersonalCalendar({date, setDate, groupName}) {
                     </div>
                 ) : events.map((event, index) => (
                     <Event 
-                    key={index} 
-                    name={event.name} 
-                    time={event.startTime ? `${convertTo12HourFormat(event.startTime)} - ${convertTo12HourFormat(event.endTime)}` : 'All Day'} 
-                    description={event.description}
-                    date={event.date}
-                    groupName={groupName}
-                    refetchEvents={refetchEvents}
+                        key={index} 
+                        name={event.name} 
+                        time={event.startTime ? `${convertTo12HourFormat(event.startTime)} - ${convertTo12HourFormat(event.endTime)}` : 'All Day'} 
+                        description={event.description}
+                        date={event.date}
+                        refetchEvents={refetchEvents}
                     />
                 ))}
                 </div>

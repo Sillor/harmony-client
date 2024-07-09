@@ -254,7 +254,7 @@ function PersonalDashboard() {
                   date={date}
                   setDate={setDate}
                   // NEED TO UPDATE THIS TO REFLECT ACTUAL TEAMS NOT PRESET TEAMS
-                  groupName={['Test Team 1', 'Test Team 3']}
+                  teamNames={['Test Team 1', 'Test Team 3']}
                 />
               </div>
             </div>
