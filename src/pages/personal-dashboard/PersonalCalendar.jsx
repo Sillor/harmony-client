@@ -16,16 +16,32 @@ import {
 
 function Event(props) {
 
+    const date = props.date.slice(0, 16)
+    const startTime = props.start ? props.start.slice(11,16) : 'N/A'
+    const endTime = props.end ? props.end.slice(11, 16) : 'N/A'
+
+    const convertTo12HourFormat = (time) => {
+        if(time === 'N/A'){
+            return time
+        }
+        const hours = parseInt(time.split(':')[0]);
+        const minutes = time.split(':')[1];
+        const period = hours >= 12 ? 'PM' : 'AM';
+        const adjustedHours = hours % 12 || 12; // Convert hours greater than 12 to 12-hour format
+        return `${adjustedHours}:${minutes} ${period}`;
+      };
+
     return (
-      <div className="event flex items-center justify-between border-b hover:scale-95 py-2 pe-2 group bg-secondary mb-3 p-2">
-        <div className="event-details">
-            <h2 className="text-sm"><b>Team:</b> {props.team}</h2>
-            <h2 className="text-sm"><b>Name:</b> {props.name}</h2>
-            <p className="text-sm"><b>Start:</b> {props.start}</p>
-            <p className="text-sm"><b>End:</b> {props.end}</p>
+        <div className="event flex items-center justify-between border-b hover:scale-95 py-2 pe-2 group bg-secondary mb-3 p-2">
+          <div className="event-details">
+            <p className="text-sm"><b>Team:</b> {props.team}</p>
+            <p className="text-sm"><b>Name:</b> {props.name}</p>
+            <p className="text-sm"><b>Date:</b> {date}</p>
+            <p className="text-sm"><b>Start:</b> {convertTo12HourFormat(startTime)}</p>
+            <p className="text-sm"><b>End:</b> {convertTo12HourFormat(endTime)}</p>
             <p className="text-sm"><b>Description:</b> {props.description}</p>
+          </div>
         </div>
-      </div>
     );
   }
 
@@ -51,6 +67,8 @@ function PersonalCalendar({date, setDate, teamNames}) {
         'Dec.',
       ];
     const [events, setEvents] = useState([])
+
+    let currentDate = String(date)
 
   
     useEffect(() => {
@@ -94,14 +112,6 @@ function PersonalCalendar({date, setDate, teamNames}) {
             console.error('Error:', error);
         }
     };
-
-    const convertTo12HourFormat = (time) => {
-        const hours = parseInt(time.split(':')[0]);
-        const minutes = time.split(':')[1];
-        const period = hours >= 12 ? 'PM' : 'AM';
-        const adjustedHours = hours % 12 || 12; // Convert hours greater than 12 to 12-hour format
-        return `${adjustedHours}:${minutes} ${period}`;
-    };
   
     return (
         <div className="utils max-w-min">
@@ -128,6 +138,7 @@ function PersonalCalendar({date, setDate, teamNames}) {
                         name={event.name}
                         team={event.team} 
                         description={event.description}
+                        date={currentDate}
                         start={event.start}
                         end={event.end}
                         refetchEvents={refetchEvents}
