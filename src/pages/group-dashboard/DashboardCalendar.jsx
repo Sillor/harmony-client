@@ -108,11 +108,12 @@ function DashboardCalendar({date, setDate, groupName}) {
     }
   };
 
+
   const [events, setEvents] = useState([])
   
   const [eventForm, setEventForm] = useState({
     calendar: groupName,
-    event: {name: '', date: '', startTime: '', endTime: '', description: ''},
+    event: {name: '', date: '' , startTime: '', endTime: '', description: ''},
   });
 
   const monthNames = [
