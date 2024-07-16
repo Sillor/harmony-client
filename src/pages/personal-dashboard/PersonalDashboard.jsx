@@ -32,7 +32,9 @@ function PersonalDashboard() {
   const [teamInvites, setTeamInvites] = useState([]);
 
   const [teams, setTeams] = useState(Object.values(globals.teamsCache));
-
+  
+  const teamNames = teams.map(team => team.name);
+ 
   const events = [
     {
       name: "Meeting",
@@ -134,40 +136,18 @@ function PersonalDashboard() {
                   <div className="icons flex gap-4 ">
                     <CreateTeamDialog setTeams={setTeams} />
 
-                    {/* <Dialog>
+                    <Dialog>
                       <DialogTrigger>
-                        <Calendar size={24} className="xl:hidden" />
+                        <Calendar size={24} className="lg:hidden" />
                       </DialogTrigger>
                       <DialogContent className="w-fit md:p-12 rounded-md max-h-[80vh] overflow-y-auto">
-                        <CustomCalendar
-                          mode="single"
-                          selected={date}
-                          onSelect={setDate}
-                          className="rounded-md border border-input h-fit mb-3"
-                        />
-                        <div className="day-breakdown rounded-md border border-input p-4">
-                          <div className="flex justify-between items-center mb-3">
-                            <h1 className="font-semibold text-3xl">Today</h1>
-                            <button className="bg-primary text-primary-foreground hover:bg-primary/90 font-bold py-1 px-4 rounded">
-                              Add
-                            </button>
-                          </div>
-                          <div className="events">
-                            <Event name="Meeting" time="10:00 AM" />
-                            <Event name="Bob's Reminder" time="11:30 AM" />
-                            <Event name="Lunch Break" time="1:00 PM" />
-                            <Event
-                              name="Brainstorming Session"
-                              time="2:30 PM"
-                            />
-                            <Event
-                              name="Charlie's DIY Dentistry Workshop"
-                              time="5:30 PM"
-                            />
-                          </div>
-                        </div>
+                      <PersonalCalendar
+                        date={date}
+                        setDate={setDate}
+                        teamNames={teamNames}
+                      />
                       </DialogContent>
-                    </Dialog> */}
+                    </Dialog>
                   </div>
                 </div>
                 <div className="chat-messages h-[calc(50vh-130px)] custom-scrollbar">
@@ -229,32 +209,12 @@ function PersonalDashboard() {
               </div>
             </div>
 
-            <div className="utils max-w-min hidden xl:block">
-              {/* <CustomCalendar
-                mode="single"
-                selected={date}
-                onSelect={setDate}
-                className="Calendar-body rounded-md border border-input h-fit mb-3 h-max"
-              /> */}
-              {/* <div className="day-breakdown rounded-md border border-input p-4 overflow-y-auto">
-                <div className="flex justify-between items-center mb-3">
-                  <h1 className="font-semibold text-3xl">Today</h1>
-                  <button className="bg-primary text-primary-foreground hover:bg-primary/90 font-bold py-1 px-4 rounded">
-                    Add
-                  </button>
-                </div>
-                <div className="event-list">
-                  {events.map((event, index) => (
-                    <Event key={index} name={event.name} time={event.time} />
-                  ))}
-                </div>
-              </div> */}
-              <div className="hidden xl:block">
+            <div className="utils max-w-min hidden lg:block mx-2">
+              <div className="">
                 <PersonalCalendar
                   date={date}
                   setDate={setDate}
-                  // NEED TO UPDATE THIS TO REFLECT ACTUAL TEAMS NOT PRESET TEAMS
-                  teamNames={['Test Team 1', 'Test Team 3']}
+                  teamNames={teamNames}
                 />
               </div>
             </div>

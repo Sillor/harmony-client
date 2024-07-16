@@ -18,7 +18,7 @@ function GroupDashboard() {
   const today = DateTime.local().toISODate();
 
   const [date, setDate] = React.useState(today);
-  console.log('date var:', date);
+  // console.log('date var:', date);
 
   const [messages, setMessages] = useState([]);
 

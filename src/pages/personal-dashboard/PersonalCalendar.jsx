@@ -15,9 +15,9 @@ import {
 
 
 function Event(props) {
-    console.log('Event Props:', props);
+
     return (
-      <div className="event flex items-center justify-between border-b hover:bg-secondary py-2 pe-2 group bg-white mb-3 p-2">
+      <div className="event flex items-center justify-between border-b hover:scale-95 py-2 pe-2 group bg-secondary mb-3 p-2">
         <div className="event-details">
             <h2 className="text-sm"><b>Team:</b> {props.team}</h2>
             <h2 className="text-sm"><b>Name:</b> {props.name}</h2>
@@ -32,10 +32,8 @@ function Event(props) {
 
 function PersonalCalendar({date, setDate, teamNames}) {
 
-    console.log('date:', date);
-
     const axiosInstance = axios.create({
-        baseURL: 'http://localhost:5000/api/calendar', // Replace with your API base URL
+        baseURL: 'http://localhost:5000/api/calendar',
         withCredentials: true
       });
     const monthNames = [
@@ -53,9 +51,7 @@ function PersonalCalendar({date, setDate, teamNames}) {
         'Dec.',
       ];
     const [events, setEvents] = useState([])
-    console.log('events:',events);
 
-    console.log('team names:', teamNames);
   
     useEffect(() => {
         const fetchEvents = async () => {
