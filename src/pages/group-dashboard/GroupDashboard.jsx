@@ -35,14 +35,14 @@ function GroupDashboard() {
       })
       .then((team) => {
         if (team.name.toLowerCase().replaceAll(" ", "-") !== group) {
-          navigate("/personalDashboard");
+          navigate("/");
           return;
         }
         setGroupName(team.name);
       })
       .catch((error) => {
         console.error("error occurred while loading team chat");
-        navigate("/personalDashboard");
+        navigate("/");
       });
   }, []);
 

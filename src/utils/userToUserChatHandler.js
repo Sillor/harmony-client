@@ -7,8 +7,8 @@ const url = import.meta.env.VITE_SERVER_ORIGIN;
 export const fetchChatHistory = async (selectedFriend, setUsername, setUserId, setChatMessage, setIsEditing) => {
   // Fetch user details
   const fetchusername = await getUser();
-  const username = fetchusername.data[0].username;
-  const userId = fetchusername.data[0].id;
+  const username = fetchusername.data.username;
+  const userId = fetchusername.data.id;
 
   localStorage.setItem("username", username);
   setUsername(username);
@@ -28,7 +28,7 @@ export const fetchChatHistory = async (selectedFriend, setUsername, setUserId, s
     });
 
     // Update state with chat messages
-    const messages = response.data.data[0];
+    const messages = response.data.data;
     setChatMessage(messages);
     setIsEditing(Array(messages.length).fill(false));
   } catch (error) {
@@ -52,7 +52,7 @@ export const listenForChatMessages = (username, selectedFriend, setChatMessage,s
           withCredentials: true,
         }
       );
-      const latestMessage = chatHistoryLatestResponse.data.data[0][0];
+      const latestMessage = chatHistoryLatestResponse.data.data[0];
       console.log("Latest message:", latestMessage);
 
       // Update the chat messages state with the latest message
@@ -131,7 +131,7 @@ export const sendMessage = async (username, recipient, message, setChatMessage,s
           withCredentials: true, // Send cookies with the request if needed
         }
       );
-      const latestMessage = chatHistoryLatestResponse.data.data[0][0];
+      const latestMessage = chatHistoryLatestResponse.data.data[0];
       console.log("Latest message:", latestMessage);
       // Update the chat messages state with the fetched messages
       if (latestMessage) {
