@@ -15,7 +15,7 @@ const ManageMembersDialog = ({ removeMember, getMembers }) => {
 
   useEffect(() => {
     getMembers().then((data) => setMembers(data));
-  }, [members]);
+  }, []);
 
   function handleRemoveConfirm(email) {
     setMembers((prev) => {
