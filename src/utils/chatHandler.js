@@ -1,12 +1,14 @@
+import globals from "./globals";
+
 const url = import.meta.env.VITE_SERVER_ORIGIN;
 
 export function loadChat({ teamUid, teamName }) {
   if (!teamUid || !teamName) throw new Error("Missing Property")
   return fetch(url + "/api/chat/load", {
     method: "POST",
-    credentials: "include",
     headers: {
       "Content-Type": "application/json",
+      "Authorization": `Bearer ${globals.authToken}`,
     },
     body: JSON.stringify({
       teamUID: teamUid,
@@ -23,9 +25,9 @@ export function sendChat({ teamUid, teamName, message, fileName, fileUID}) {
   if (!teamUid || !teamName || !message) throw new Error("Missing Property")
   return fetch(url + "/api/chat/create", {
     method: "POST",
-    credentials: "include",
     headers: {
       "Content-Type": "application/json",
+      "Authorization": `Bearer ${globals.authToken}`,
     },
     body: JSON.stringify({
       teamUID: teamUid,
@@ -45,9 +47,9 @@ export function editChat({ chatUid, teamUid, teamName, message }) {
   if (!teamUid || !teamName || !chatUid || !message) throw new Error("Missing Property")
   return fetch(url + "/api/chat/edit", {
     method: "POST",
-    credentials: "include",
     headers: {
       "Content-Type": "application/json",
+      "Authorization": `Bearer ${globals.authToken}`,
     },
     body: JSON.stringify({
       teamUID: teamUid,
@@ -66,9 +68,9 @@ export function deleteChat({ chatUid, teamUid, teamName }) {
   if (!teamUid || !teamName || !chatUid) throw new Error("Missing Property")
   return fetch(url + "/api/chat/delete", {
     method: "DELETE",
-    credentials: "include",
     headers: {
       "Content-Type": "application/json",
+      "Authorization": `Bearer ${globals.authToken}`,
     },
     body: JSON.stringify({
       teamUID: teamUid,

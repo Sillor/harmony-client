@@ -19,7 +19,6 @@ export async function login(email, password) {
       headers: {
         "Content-Type": "application/json",
       },
-      credentials: "include",
       body: JSON.stringify({
         email,
         password,
@@ -30,7 +29,9 @@ export async function login(email, password) {
 
     if (result.success) {
       globals.email = email;
+      globals.authToken = result.token;
       localStorage.setItem("harmony_email", email);
+      localStorage.setItem("token", result.token);
       socket.connect()
     }
 
@@ -57,7 +58,6 @@ export async function register(username, email, password) {
       headers: {
         "Content-Type": "application/json",
       },
-      credentials: "include",
       body: JSON.stringify({
         username,
         email,
@@ -69,7 +69,9 @@ export async function register(username, email, password) {
 
     if (result.success) {
       globals.email = email;
+      globals.authToken = result.token;
       localStorage.setItem("harmony_email", email);
+      localStorage.setItem("token", result.token);
     }
 
     return result;
@@ -89,14 +91,18 @@ export async function logout() {
   try {
     const response = await fetch(url + "/api/users/logoutUser", {
       method: "POST",
-      credentials: "include",
+      headers: {
+        "Authorization": `Bearer ${globals.authToken}`,
+      },
     })
 
     const result = await response.json();
 
     if (result.success) {
       globals.email = null;
+      globals.authToken = null;
       localStorage.removeItem("harmony_email");
+      localStorage.removeItem("token");
       peer.authToken = null;
     }
 
@@ -113,7 +119,9 @@ export const getUser = async () => {
   try {
     const response = await fetch(url + "/api/database/getUser", {
       method: "GET",
-      credentials: "include",
+      headers: {
+        "Authorization": `Bearer ${globals.authToken}`,
+      },
     });
 
     const result = await response.json();
@@ -132,12 +140,19 @@ export const updateUser = async (username, email) => {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        "Authorization": `Bearer ${globals.authToken}`,
       },
-      credentials: "include",
       body: JSON.stringify({ username, email }),
     });
 
     const result = await response.json();
+
+    if (result.success) {
+      globals.email = email;
+      globals.authToken = result.token;
+      localStorage.setItem("harmony_email", email);
+      localStorage.setItem("token", result.token);
+    }
     return result;
   } catch (error) {
     return {
@@ -153,8 +168,8 @@ export const uploadAvatar = async (image, avatarLink) => {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        "Authorization": `Bearer ${globals.authToken}`,
       },
-      credentials: "include",
       body: JSON.stringify({ image, avatarLink }),
     });
 
@@ -174,8 +189,8 @@ export const deleteAvatar = async (avatarLink) => {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
+        "Authorization": `Bearer ${globals.authToken}`,
       },
-      credentials: "include",
       body: JSON.stringify({ avatarLink }),
     });
 
@@ -192,9 +207,9 @@ export const deleteAvatar = async (avatarLink) => {
 export function addToTeam({ teamId, teamName, targetEmail }) {
   return fetch(url + "/api/database/addToTeam", {
     method: "POST",
-    credentials: "include",
     headers: {
       "Content-Type": "application/json",
+      "Authorization": `Bearer ${globals.authToken}`,
     },
     body: JSON.stringify({
       targetEmail: targetEmail,
