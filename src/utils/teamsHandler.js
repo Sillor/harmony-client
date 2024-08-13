@@ -1,3 +1,5 @@
+import globals from "./globals";
+
 const url = import.meta.env.VITE_SERVER_ORIGIN;
 
 /**
@@ -9,9 +11,9 @@ export function createTeam({ teamName }) {
   if (!teamName) throw new Error("Missing Property")
   return fetch(url + "/api/database/createTeam", {
     method: "POST",
-    credentials: "include",
     headers: {
       "Content-Type": "application/json",
+      "Authorization": `Bearer ${globals.authToken}`,
     },
     body: JSON.stringify({
       teamName,
@@ -33,9 +35,9 @@ export function addToTeam({ teamUid, teamName, targetEmail }) {
   if (!teamName || !teamUid || !targetEmail) throw new Error("Missing Property")
   return fetch(url + "/api/database/addToTeam", {
     method: "POST",
-    credentials: "include",
     headers: {
       "Content-Type": "application/json",
+      "Authorization": `Bearer ${globals.authToken}`,
     },
     body: JSON.stringify({
       targetEmail: targetEmail,
@@ -56,7 +58,9 @@ export function addToTeam({ teamUid, teamName, targetEmail }) {
 export function loadTeams() {
   return fetch(url + "/api/database/loadJoinedTeams", {
     method: "GET",
-    credentials: "include",
+    headers: {
+      "Authorization": `Bearer ${globals.authToken}`,
+    }
   })
     .then((res) => res.json())
     .catch((error) => {
@@ -68,9 +72,9 @@ export function removeTeamLink({ teamUid, teamName, targetEmail }) {
   if (!teamName || !teamUid) throw new Error("Missing Property")
   return fetch(url + "/api/database/removeTeamLink", {
     method: "POST",
-    credentials: "include",
     headers: {
       "Content-Type": "application/json",
+      "Authorization": `Bearer ${globals.authToken}`,
     },
     body: JSON.stringify({
       teamUID: teamUid,
@@ -88,9 +92,9 @@ export function leaveTeam({ teamUid, teamName }) {
   if (!teamName || !teamUid) throw new Error("Missing Property")
   return fetch(url + "/api/database/leaveTeam", {
     method: "POST",
-    credentials: "include",
     headers: {
       "Content-Type": "application/json",
+      "Authorization": `Bearer ${globals.authToken}`,
     },
     body: JSON.stringify({
       teamUID: teamUid,
@@ -107,9 +111,9 @@ export function updateTeamName({ teamUid, teamNameOld, teamNameNew }) {
   if (!teamUid || !teamNameOld || !teamNameNew ) throw new Error("Missing Property")
   return fetch(url + "/api/database/updateTeamName", {
     method: "POST",
-    credentials: "include",
     headers: {
       "Content-Type": "application/json",
+      "Authorization": `Bearer ${globals.authToken}`,
     },
     body: JSON.stringify({
       teamUID: teamUid,
@@ -127,9 +131,9 @@ export function deleteTeam({ teamUid, teamName }) {
   if (!teamName || !teamUid) throw new Error("Missing Property")
   return fetch(url + "/api/database/deleteTeam", {
     method: "POST",
-    credentials: "include",
     headers: {
       "Content-Type": "application/json",
+      "Authorization": `Bearer ${globals.authToken}`,
     },
     body: JSON.stringify({
       teamUID: teamUid,
@@ -146,9 +150,9 @@ export function loadMembers({ teamUid, teamName }) {
   if (!teamName || !teamUid) throw new Error("Missing Property")
   return fetch(url + "/api/database/loadTeamMemberList", {
     method: "POST",
-    credentials: "include",
     headers: {
       "Content-Type": "application/json",
+      "Authorization": `Bearer ${globals.authToken}`,
     },
     body: JSON.stringify({
       teamUID: teamUid,

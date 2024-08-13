@@ -4,6 +4,7 @@ import { io } from "socket.io-client";
 
 const globals = {
   email: localStorage.getItem("harmony_email"),
+  authToken: localStorage.getItem("token"),
   teamsCache: {},
 };
 let connectionAttempts = 0;
@@ -14,7 +15,9 @@ export default globals;
 export const AppContext = createContext({})
 
 export const socket = io(import.meta.env.MODE === "production" ? import.meta.env.VITE_SERVER_ORIGIN : import.meta.env.VITE_SIGNALING_SERVER_ORIGIN, {
-  withCredentials: true
+  auth: {
+    token: globals.authToken,
+  }
 })
 
 socket.on("connect_error", (err) => {

@@ -40,9 +40,9 @@ const Profile = () => {
       return;
     }
 
-    const user = data.data[0];
+    const user = data.data;
     
-    setProfilePicture(user.profileURL);
+    setProfilePicture(user.profileUrl);
     setUserData({
       username: user.username,
       email: user.email

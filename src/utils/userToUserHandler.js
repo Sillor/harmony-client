@@ -1,10 +1,14 @@
+import globals from "./globals";
+
 const url = import.meta.env.VITE_SERVER_ORIGIN;
 
 export async function loadFriendsList() {
   try {
     const response = await fetch(`${url}/api/database/loadFriendsList`, {
       method: "GET",
-      credentials: "include"
+      headers: {
+        "Authorization": `Bearer ${globals.authToken}`,
+      }
     });
 
     const result = await response.json();
@@ -21,9 +25,9 @@ export async function deleteFriend(targetEmail) {
   try {
     const response = await fetch(`${url}/api/database/removeFriend`, {
       method: "POST",
-      credentials: "include",
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${globals.authToken}`,
       },
       body: JSON.stringify({ targetEmail })
     });

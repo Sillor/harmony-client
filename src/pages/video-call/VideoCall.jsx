@@ -86,7 +86,7 @@ export default function VideoCall() {
       });
     }).catch((error)=>{
       console.error("error occurred while loading team chat", error)
-      // navigate("/personalDashboard")
+      // navigate("/")
     });
   }
 

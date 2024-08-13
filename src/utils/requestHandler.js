@@ -1,3 +1,5 @@
+import globals from "./globals";
+
 const url = import.meta.env.VITE_SERVER_ORIGIN;
 
 /**
@@ -9,9 +11,9 @@ export async function createTeamRequest({targetEmail, teamName, teamUid}) {
   try {
     const response = await fetch(`${url}/api/database/createTeamRequest`, {
       method: "POST",
-      credentials: "include",
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${globals.authToken}`,
       },
       body: JSON.stringify({
         targetEmail,
@@ -46,7 +48,9 @@ export async function loadTeamRequests() {
   try {
     const response = await fetch(`${url}/api/database/loadIncomingTeamRequest`, {
       method: "GET",
-      credentials: "include"
+      headers: {
+        "Authorization": `Bearer ${globals.authToken}`,
+      }
     });
 
     const result = await response.json();
@@ -84,9 +88,9 @@ export async function resolveTeamRequest({accepted, requestUid}) {
   try {
     const response = await fetch(`${url}/api/database/resolveIncomingTeamRequest`, {
       method: "POST",
-      credentials: "include",
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${globals.authToken}`,
       },
       body: JSON.stringify({
         accepted,
@@ -118,9 +122,9 @@ export async function createFriendRequest({ targetEmail }) {
   try {
     const response = await fetch(`${url}/api/database/createFriendRequest`, {
       method: "POST",
-      credentials: "include",
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${globals.authToken}`,
       },
       body: JSON.stringify({
         targetEmail
@@ -153,7 +157,9 @@ export async function loadFriendRequests() {
   try {
     const response = await fetch(`${url}/api/database/loadIncomingFriendRequest`, {
       method: "GET",
-      credentials: "include"
+      headers: {
+        "Authorization": `Bearer ${globals.authToken}`,
+      }
     });
 
     const result = await response.json();
@@ -186,9 +192,9 @@ export async function resolveFriendRequest({accepted, requestUid}) {
   try {
     const response = await fetch(`${url}/api/database/resolveIncomingFriendRequest`, {
       method: "POST",
-      credentials: "include",
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${globals.authToken}`,
       },
       body: JSON.stringify({
         accepted,
