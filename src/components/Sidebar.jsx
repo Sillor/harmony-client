@@ -73,12 +73,11 @@ function Sidebar() {
 
   const handleLogout = async () => {
     const data = await logout();
-
     if (!data.success) {
+      console.log("error", data)
       return;
     }
-
-    navigate("/login");
+    navigate("/");
   };
 
   return (

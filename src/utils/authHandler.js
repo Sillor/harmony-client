@@ -1,5 +1,4 @@
 import globals, { peer, socket } from "./globals";
-
 const url = import.meta.env.VITE_SERVER_ORIGIN;
 
 export function checkLoggedIn() {
@@ -51,6 +50,7 @@ export async function login(email, password) {
  * @returns {Promise<{success: boolean, message?: string}>}
  */
 export async function register(username, email, password) {
+
   try {
     const response = await fetch(url + "/api/users/registerUser", {
       method: "POST",
@@ -87,6 +87,22 @@ export async function register(username, email, password) {
  */
 export async function logout() {
   try {
+    let email = localStorage.getItem("harmony_email")
+    const fetchGoogleSessionCheck = await fetch(url + `/api/auth/google/token-info/${email}`, 
+    {credentials: "include"})
+    const googleSession = await fetchGoogleSessionCheck.json()
+    
+    if(googleSession){
+      const googleLogout = await fetch(url + `/api/auth/google/logout/${googleSession.tokenInfo.authToken}`,{
+        credentials: "include"
+      })
+      const googleLogoutJSON = await googleLogout.json()
+      globals.email = null;
+      localStorage.removeItem("harmony_email");
+      peer.authToken = null;
+      return googleLogoutJSON
+    }
+
     const response = await fetch(url + "/api/users/logoutUser", {
       method: "POST",
       credentials: "include",
@@ -202,4 +218,21 @@ export function addToTeam({ teamId, teamName, targetEmail }) {
       teamName: teamName,
     }),
   }).then((data) => data.json());
+}
+
+export const handleGoogleAuth = async () => {
+  const response = await fetch('http://localhost:5000/api/auth/google/consent-window')
+  const consentWindow = await response.json()
+  if (consentWindow.url) {
+    // Redirect to the Google OAuth URL
+    window.open(consentWindow.url, "_self");
+  } else {
+    alert('Failed to generate OAuth URL');
+  }
+}
+
+export const handleGoogleLogout = async () => {
+  console.log("google logout trigger")
+  const response = await fetch('http://localhost:5000/api/auth/google/logout')
+  localStorage.removeItem("harmony_email")
 }

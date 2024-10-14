@@ -1,4 +1,4 @@
-import { createContext, useEffect, useRef, useState } from "react";
+import { createContext, useEffect, useRef, useState, useLayoutEffect } from "react";
 import { Outlet, useNavigate, useLocation } from "react-router";
 import CallRequestAlert from "./CallRequestAlert";
 import Navbar from "./Navbar";
@@ -15,9 +15,31 @@ function App() {
   const location = useLocation();
   const audioRef = useRef(null);
   const { toast } = useToast();
-
+ 
   setTheme();
 
+  useLayoutEffect(() => {
+    async function handleOAuthFetch(){
+      try{
+      const fetchGoogleUser = await fetch('http://localhost:5000/api/auth/google/session-info', {
+        credentials: "include",
+      })
+      const userData = await fetchGoogleUser.json()
+      
+      console.log("handleoauthfetch", userData)
+        localStorage.setItem("harmony_email", userData.user.email)
+        navigate('/')
+        return 
+      } catch(error) {
+        console.log("nothing to fetch")
+        return 
+      } 
+    }
+    handleOAuthFetch()
+    return 
+
+  }, [])
+  
   useEffect(() => {
     const [, group, , uid] = location.pathname.split("/");
     if (group === "group" && teamNotifications[uid]) {
