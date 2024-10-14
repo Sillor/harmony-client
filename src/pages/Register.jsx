@@ -16,7 +16,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import StatusMessage from "../components/ui/status-message";
 import PasswordVisibilityToggle from "../components/ui/password-visibility-toggle";
-import { register } from "../utils/authHandler";
+import { register, handleGoogleAuth } from "../utils/authHandler";
 
 const Register = () => {
   const [inputData, setInputData] = useState({
@@ -218,12 +218,18 @@ const Register = () => {
               />
               {/* Create Account Button */}
               <div className="flex justify-end mt-3">
+                
                 <Button type="submit" variant="outline">
                   Create
                 </Button>
               </div>
             </div>
           </form>
+          <div className="flex justify-end mt-3">
+            <Button onClick={handleGoogleAuth}>
+                  Quick Register using Google
+            </Button>
+          </div>
         </CardContent>
         <CardFooter className="flex justify-start">
           <CardDescription>
