@@ -91,8 +91,7 @@ export async function logout() {
     const fetchGoogleSessionCheck = await fetch(url + `/api/auth/google/token-info/${email}`, 
     {credentials: "include"})
     const googleSession = await fetchGoogleSessionCheck.json()
-    
-    if(googleSession){
+    if(googleSession.tokenInfo){
       const googleLogout = await fetch(url + `/api/auth/google/logout/${googleSession.tokenInfo.authToken}`,{
         credentials: "include"
       })

@@ -16,18 +16,33 @@ function App() {
   const audioRef = useRef(null);
   const { toast } = useToast();
  
-  setTheme();
+    
 
   useLayoutEffect(() => {
     async function handleOAuthFetch(){
       try{
-      const fetchGoogleUser = await fetch('http://localhost:5000/api/auth/google/session-info', {
-        credentials: "include",
-      })
-      const userData = await fetchGoogleUser.json()
-      
-      console.log("handleoauthfetch", userData)
+        const storedEmail = localStorage.getItem("harmony_email")
+        if(storedEmail){
+          const fetchGoogleUser = await fetch(`http://localhost:5000/api/auth/google/token-info/${storedEmail}`, {
+          credentials: "include",
+          headers: authorization
+          })
+
+          const userInfo = await fetchGoogleUser.json()
+          console.log(userInfo)
+          return
+
+        }//testuser1!Test
+        
+        const fetchGoogleUser = await fetch('http://localhost:5000/api/auth/google/session-info', {
+          credentials: "include",
+        })
+        const userData = await fetchGoogleUser.json()
+        
         localStorage.setItem("harmony_email", userData.user.email)
+        
+        globals.email = userData.user.email;
+        socket.connect()
         navigate('/')
         return 
       } catch(error) {
