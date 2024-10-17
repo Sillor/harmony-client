@@ -3,7 +3,7 @@ import React from "react";
 function FriendInvites({ name, avatar, resolve }) {
   return (
     <>
-      <div className="border border-input rounded-md flex p-2 mb-2 justify-between items-center">
+      <div className="FrindInvite-body border border-input rounded-md flex p-2 mb-2 justify-between items-center">
         <div className="invite-name me-6 flex items-center">
           <img
             src={avatar || "https://via.placeholder.com/40"}

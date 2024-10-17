@@ -22,7 +22,7 @@ export default function AvailableRooms({ members, teams }) {
       </CardHeader>
       <CardContent className="flex gap-3">
         <ScrollArea
-          className="h-52 border-input border p-3 rounded-md flex-1"
+          className="TeamVideo-body h-52 border-input border p-3 rounded-md flex-1"
           key="0"
         >
           <h4 className="mb-4 text-sm font-medium leading-none">Teams</h4>
@@ -48,7 +48,7 @@ export default function AvailableRooms({ members, teams }) {
           )}
         </ScrollArea>
         <ScrollArea
-          className="h-52 border-input border p-3 rounded-md flex-1"
+          className="UserVideo-body h-52 border-input border p-3 rounded-md flex-1"
           key="1"
         >
           <h4 className="mb-4 text-sm font-medium leading-none">Users</h4>

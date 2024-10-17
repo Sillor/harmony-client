@@ -1,10 +1,14 @@
+import globals from "./globals";
+
 const url = import.meta.env.VITE_SERVER_ORIGIN
 
 export async function fetchFileList(chatId) {
     let id = chatIdCheck(chatId)
     try {
         const response = await fetch(`${url}/files/list/${id}`, {
-          credentials: "include"
+          headers: {
+            "Authorization": `Bearer ${globals.authToken}`,
+          }
         });
         const data = await response.json();
         return data;
@@ -18,7 +22,9 @@ export async function fileListSortedByLatest(chatId){
     let id = chatIdCheck(chatId)
     try {
         const response = await fetch(`${url}/files/list/${id}`, {
-          credentials: "include"
+          headers: {
+            "Authorization": `Bearer ${globals.authToken}`,
+          }
         });
         const data = await response.json();
         console.log("check files", data.files)
@@ -32,13 +38,17 @@ export function fileDownload(e, chatId, fileId){
     e.preventDefault();
     let id = chatIdCheck(chatId)
     fetch(`${url}/files/getFileInfo/${id}/${fileId}`,{
-        credentials: "include"
+        headers: {
+            "Authorization": `Bearer ${globals.authToken}`,
+          }
       })
       .then(res => res.json())
       .then(json => {
         
         fetch(`${url}/files/download/${id}/${fileId}`,{
-            credentials: "include"
+            headers: {
+                "Authorization": `Bearer ${globals.authToken}`,
+              }
           })
           .then(res => {
               return res.blob()
@@ -68,18 +78,22 @@ export async function fileUpload(data, chatId){
      return await fetch(`${url}/files/upload/${id}`, {
       method: 'POST',
       body: formData,
-      credentials: "include"
+      headers: {
+        "Authorization": `Bearer ${globals.authToken}`,
+      }
     })
     .then(res => res.json())
     .then(data => data)
     .catch((error) => console.error('Server Error:', error));
 }
 
-export async function fileDelete(e, chatId, fileName){
+export async function fileDelete(e, chatId, fileName, fileId, fileType){
     let id = chatIdCheck(chatId)
-    await fetch(`${url}/files/delete/${id}/${fileName}`, {
+    await fetch(`${url}/files/delete/${id}/${fileName}/${fileId}/${fileType}`, {
         method: 'DELETE',
-        credentials: "include"
+        headers: {
+          "Authorization": `Bearer ${globals.authToken}`,
+        }
     })
     .then((res) => {
         const data = res.json()
@@ -90,11 +104,13 @@ export async function fileDelete(e, chatId, fileName){
 
 
 
-export async function fileDuplicate(e, chatId, fileName){
+export async function fileDuplicate(e, chatId, fileName, fileId, fileType){
     let id = chatIdCheck(chatId)
-    await fetch(`${url}/files/duplicate/${id}/${fileName}`, {
+    await fetch(`${url}/files/duplicate/${id}/${fileName}/${fileId}/${fileType}`, {
         method: 'POST',
-        credentials: "include"
+        headers: {
+          "Authorization": `Bearer ${globals.authToken}`,
+        }
     })
     .then((res) => {
         const data = res.json()
@@ -103,15 +119,18 @@ export async function fileDuplicate(e, chatId, fileName){
     .catch((error) => console.error('Server Error:', error));
 }
 
-export async function fileRename(e, chatId, fileName){
+export async function fileRename(e, chatId, fileName, fileId, fileType){
     let id = chatIdCheck(chatId)
-    const newFileName = prompt("Enter new file name");
-    await fetch(`${url}/files/rename/${id}/${fileName}`, {
+    const newFileName = prompt("Enter new file name", fileName);
+    if (newFileName === null || newFileName === ""){
+        return
+    }
+    await fetch(`${url}/files/rename/${id}/${fileName}/${fileId}/${fileType}`, {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json'
+                  'Content-Type': 'application/json',
+                  "Authorization": `Bearer ${globals.authToken}`,
                 },
-                credentials: "include",
                 body: JSON.stringify({
                     newFileName
                 })

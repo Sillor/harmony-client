@@ -62,7 +62,7 @@ function Teams({ name, owned, link, uid, updateTeams }) {
   }
 
   return (
-    <div className="border border-input rounded-md flex p-3 mb-2 flex-col relative">
+    <div className="Teams-body border border-input rounded-md flex p-3 mb-2 flex-col relative">
       {teamNotifications[uid] && (
         <div className="h-4 absolute bg-red-500 top-0 left-0 rounded-[0.32rem] text-xs text-center font-mono text-white px-1">
           {teamNotifications[uid]}

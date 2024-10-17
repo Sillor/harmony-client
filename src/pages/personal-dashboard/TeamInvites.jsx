@@ -3,7 +3,7 @@ import React from "react";
 function TeamInvites({ name, resolve}) {
   return (
     <>
-      <div className="border border-input rounded-md flex p-2 mb-2 justify-between items-center">
+      <div className="TeamInvite-body border border-input rounded-md flex p-2 mb-2 justify-between items-center">
         <div className="invite-body me-6 flex items-center">
           <img
             src="assets\\img\\groupChat.png"

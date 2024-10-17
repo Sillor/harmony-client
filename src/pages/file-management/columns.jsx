@@ -134,7 +134,7 @@ export default [
           <DropdownMenuContent align="end">
             <DropdownMenuItem
             onClick={e => {
-                fileRename(e, chatId, row.getValue("title"))
+                fileRename(e, chatId, row.getValue("title"), row.original.fileId, row.getValue("type"))
                  window.location.reload();
                 }}>
               <Pencil1Icon />
@@ -142,7 +142,7 @@ export default [
             </DropdownMenuItem>
             <DropdownMenuItem 
               onClick={e => {
-                fileDownload(e, chatId, row.original.fileId, row.getValue("title"))
+                fileDownload(e, chatId, row.original.fileId, row.getValue("type"))
                 }}>
               <DownloadIcon />
               <div className="ps-2">Save
@@ -150,7 +150,7 @@ export default [
             </DropdownMenuItem>
             <DropdownMenuItem 
               onClick={e => {
-                fileDuplicate(e, chatId, row.getValue("title"))
+                fileDuplicate(e, chatId, row.getValue("title"), row.original.fileId, row.getValue("type"))
                 window.location.reload();
                 }}>
               <CopyIcon />
@@ -163,7 +163,7 @@ export default [
             </DropdownMenuItem>
             <DropdownMenuItem className="text-red-500 focus:text-red-500" 
               onClick={e => {
-                fileDelete(e, chatId, row.getValue("title"))
+                fileDelete(e, chatId, row.getValue("title"), row.original.fileId, row.getValue("type"))
                 window.location.reload();
                 }}>
               <TrashIcon />

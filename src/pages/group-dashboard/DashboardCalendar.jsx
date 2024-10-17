@@ -20,16 +20,26 @@ import { Button } from '@/components/ui/button';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 
-async function onDeleteEvent (groupName, name, refetchEvents) {
 
+
+const axiosInstance = axios.create({
+  baseURL: 'http://localhost:5000/api/calendar', // Replace with your API base URL
+  withCredentials: true
+});
+
+async function onDeleteEvent (team, name, date, refetchEvents) {
   const isConfirmed = window.confirm('Are you sure you want to delete this event?');
   if (!isConfirmed) {
+    console.log('User canceled deletion of an event.');
     return;
+    
+  } else {
+    console.log('User confirmed deletion of an event.');
   }
-
+  
   try {
-    const response = await axios.delete('http://localhost:5000/api/calendar/deleteevent', {
-      data: { calendar: groupName, eventName: name }
+    const response = await axiosInstance.delete('/deleteevent', {
+      data: { calendar: team, eventName: name, eventDate: date },
     })
     refetchEvents();
     console.log('Event deleted:', response.data);
@@ -41,16 +51,35 @@ async function onDeleteEvent (groupName, name, refetchEvents) {
 };
 
 function Event(props) {
+
+  const date = props.date.slice(0, 16)
+  const startTime = props.start ? props.start.slice(11,16) : 'N/A'
+  const endTime = props.end ? props.end.slice(11, 16) : 'N/A'
+
+  const convertTo12HourFormat = (time) => {
+        if(time === 'N/A'){
+            return time
+        }
+        const hours = parseInt(time.split(':')[0]);
+        const minutes = time.split(':')[1];
+        const period = hours >= 12 ? 'PM' : 'AM';
+        const adjustedHours = hours % 12 || 12; // Convert hours greater than 12 to 12-hour format
+        return `${adjustedHours}:${minutes} ${period}`;
+      };
+
   return (
-    <div className="event flex items-center justify-between border-b hover:bg-secondary py-2 pe-2 group">
+    <div className="event flex items-center justify-between border-b hover:scale-95 py-2 pe-2 group bg-secondary mb-3 p-2">
       <div className="event-details">
-        <h2 className="font-semibold text-sm">{props.name}</h2>
-        <p className="text-sm">{props.date.slice(0,10)} | {props.date.slice(11,16)} - {props.date.slice(20,25)}</p>
-        <p className="text-sm">{props.description}</p>
+        <p className="text-sm"><b>Team:</b> {props.team}</p>
+        <p className="text-sm"><b>Name:</b> {props.name}</p>
+        <p className="text-sm"><b>Date:</b> {date}</p>
+        <p className="text-sm"><b>Start:</b> {convertTo12HourFormat(startTime)}</p>
+        <p className="text-sm"><b>End:</b> {convertTo12HourFormat(endTime)}</p>
+        <p className="text-sm"><b>Description:</b> {props.description}</p>
       </div>
       <div
         className="delete-icon opacity-0 group-hover:opacity-100 cursor-pointer"
-        onClick={() => onDeleteEvent(props.groupName, props.name, props.refetchEvents)}
+        onClick={() => onDeleteEvent(props.team, props.name, props.date, props.refetchEvents)}
       >
         <X />
       </div>
@@ -58,15 +87,15 @@ function Event(props) {
   );
 }
 
-
 function DashboardCalendar({date, setDate, groupName}) {
-
+  
   const refetchEvents = async () => {
     try {
       setEvents([]);
       if (date) {
         const formattedDate = DateTime.fromJSDate(new Date(date)).toISODate();
-        const response = await axios.get(`http://localhost:5000/api/calendar/listevents/${groupName}?date=${formattedDate}`);
+        const response = await axiosInstance.get(`/listevents/${groupName}?date=${formattedDate}`, {
+        });
         const data = response.data;
         if (Array.isArray(data)) {
           setEvents(data);
@@ -79,11 +108,12 @@ function DashboardCalendar({date, setDate, groupName}) {
     }
   };
 
+
   const [events, setEvents] = useState([])
   
   const [eventForm, setEventForm] = useState({
     calendar: groupName,
-    event: {name: '', date: '', startTime: '', endTime: '', description: ''},
+    event: {name: '', date: '' , startTime: '', endTime: '', description: ''},
   });
 
   const monthNames = [
@@ -115,7 +145,7 @@ function DashboardCalendar({date, setDate, groupName}) {
   const handleFormSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:5000/api/calendar/createevent', eventForm);
+      const response = await axiosInstance.post('/createevent', eventForm);
       console.log('Event added:', response.data);
       setEventForm({
         calendar: groupName,
@@ -128,6 +158,8 @@ function DashboardCalendar({date, setDate, groupName}) {
     }
   };
 
+  let currentDate = String(date)
+
     useEffect(() => {
         const fetchEvents = async () => {
             try {
@@ -135,7 +167,8 @@ function DashboardCalendar({date, setDate, groupName}) {
                 setEvents([])
                 if(date){
                 const formattedDate = DateTime.fromJSDate(new Date(date)).toISODate();
-                const response = await axios.get(`http://localhost:5000/api/calendar/listevents/${groupName}?date=${formattedDate}`)
+                const response = await axiosInstance.get(`/listevents/${groupName}?date=${formattedDate}`, {
+                })
                 const data = response.data
                 if (Array.isArray(data)) {
                   setEvents(data);
@@ -149,14 +182,6 @@ function DashboardCalendar({date, setDate, groupName}) {
         };
         fetchEvents();
     }, [date]);
-  
-    const convertTo12HourFormat = (time) => {
-        const hours = parseInt(time.split(':')[0]);
-        const minutes = time.split(':')[1];
-        const period = hours >= 12 ? 'PM' : 'AM';
-        const adjustedHours = hours % 12 || 12; // Convert hours greater than 12 to 12-hour format
-        return `${adjustedHours}:${minutes} ${period}`;
-    };
   
     return (
     
@@ -231,11 +256,12 @@ function DashboardCalendar({date, setDate, groupName}) {
               ) : events.map((event, index) => (
                 <Event 
                   key={index} 
-                  name={event.name} 
-                  time={event.startTime ? `${convertTo12HourFormat(event.startTime)} - ${convertTo12HourFormat(event.endTime)}` : 'All Day'} 
+                  name={event.name}
+                  team={event.team} 
                   description={event.description}
-                  date={event.date}
-                  groupName={groupName}
+                  date={currentDate}
+                  start={event.start}
+                  end={event.end}
                   refetchEvents={refetchEvents}
                 />
               ))}
