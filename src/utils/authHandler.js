@@ -89,17 +89,19 @@ export async function register(username, email, password) {
  */
 export async function logout() {
   try {
-    let email = localStorage.getItem("harmony_email")
-    const fetchGoogleSessionCheck = await fetch(url + `/api/auth/google/token-info/${email}`, 
-    {credentials: "include"})
-    const googleSession = await fetchGoogleSessionCheck.json()
-    if(googleSession.tokenInfo){
-      const googleLogout = await fetch(url + `/api/auth/google/logout/${googleSession.tokenInfo.authToken}`,{
+    let storedEmail = localStorage.getItem("harmony_email")
+    let fetchInfo = await fetch(url + `/api/auth/google/token-info/${storedEmail}`,{
+      credentials: "include"
+    }) 
+    let googleToken = await fetchInfo.json()
+    if(googleToken.tokenInfo){
+      const googleLogout = await fetch(url + `/api/auth/google/logout/${googleToken.tokenInfo.authToken}`,{
         credentials: "include"
       })
       const googleLogoutJSON = await googleLogout.json()
       globals.email = null;
       localStorage.removeItem("harmony_email");
+      localStorage.removeItem("token");
       peer.authToken = null;
       return googleLogoutJSON
     }
@@ -243,10 +245,4 @@ export const handleGoogleAuth = async () => {
   } else {
     alert('Failed to generate OAuth URL');
   }
-}
-
-export const handleGoogleLogout = async () => {
-  console.log("google logout trigger")
-  const response = await fetch('http://localhost:5000/api/auth/google/logout')
-  localStorage.removeItem("harmony_email")
 }

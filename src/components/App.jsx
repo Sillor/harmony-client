@@ -16,45 +16,41 @@ function App() {
   const audioRef = useRef(null);
   const { toast } = useToast();
  
-    
-
   useLayoutEffect(() => {
     async function handleOAuthFetch(){
       try{
-        const storedEmail = localStorage.getItem("harmony_email")
+        const storedEmail = localStorage.getItem("harmony_email") || ""
         if(storedEmail){
           const fetchGoogleUser = await fetch(`http://localhost:5000/api/auth/google/token-info/${storedEmail}`, {
-          credentials: "include",
-          headers: authorization
+          credentials: "include"
           })
-
-          const userInfo = await fetchGoogleUser.json()
-          console.log(userInfo)
-          return
-
-        }//testuser1!Test
+          if(fetchGoogleUser){
+             return
+            } else {
+              return console.error("no google account")
+            }
+        }
         
         const fetchGoogleUser = await fetch('http://localhost:5000/api/auth/google/session-info', {
-          credentials: "include",
-        })
+          credentials: "include"
+          })
         const userData = await fetchGoogleUser.json()
         
-        localStorage.setItem("harmony_email", userData.user.email)
-        
-        globals.email = userData.user.email;
+        localStorage.setItem("harmony_email", userData.user.payload.email)
+        localStorage.setItem("token", userData.user.token)
         socket.connect()
-        navigate('/')
+        window.location.href = '/'
         return 
       } catch(error) {
-        console.log("nothing to fetch")
+        console.log("nothing to fetch", error)
         return 
       } 
     }
     handleOAuthFetch()
     return 
-
-  }, [])
   
+  }, [navigate])
+
   useEffect(() => {
     const [, group, , uid] = location.pathname.split("/");
     if (group === "group" && teamNotifications[uid]) {
