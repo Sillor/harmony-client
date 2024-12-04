@@ -6,6 +6,7 @@ import setTheme from "../utils/setTheme";
 import globals, { peer, socket, AppContext } from "../utils/globals";
 import { useToast } from "@/components/ui/use-toast";
 import { Toaster } from "@/components/ui/toaster";
+import Loading from "../pages/Loading";
 
 function App() {
   const [callAlert, setCallAlert] = useState(null);
@@ -15,7 +16,8 @@ function App() {
   const location = useLocation();
   const audioRef = useRef(null);
   const { toast } = useToast();
- 
+  const [isLoading, setLoading] = useState(true)
+  
   useLayoutEffect(() => {
     async function handleOAuthFetch(){
       try{
@@ -35,14 +37,15 @@ function App() {
           credentials: "include"
           })
         const userData = await fetchGoogleUser.json()
-        
+
         localStorage.setItem("harmony_email", userData.user.payload.email)
         localStorage.setItem("token", userData.user.token)
         socket.connect()
+        setLoading(false)
         window.location.href = '/'
         return 
       } catch(error) {
-        console.log("nothing to fetch", error)
+        console.log("nothing to fetch", error, userData)
         return 
       } 
     }
@@ -50,6 +53,10 @@ function App() {
     return 
   
   }, [navigate])
+
+  useEffect(() => {
+    setTimeout(() => setLoading(false), 2000)
+  }, [])
 
   useEffect(() => {
     const [, group, , uid] = location.pathname.split("/");
@@ -185,7 +192,10 @@ function App() {
       socket.off("update:new_team_request", onTeamRequestReceived);
     };
   }, [location]);
-  return (
+
+  return isLoading ? 
+ (<Loading/>) :
+   (
     <AppContext.Provider
       value={{ teamNotifications, setTeamNotifications, teamUpdated }}
     >
