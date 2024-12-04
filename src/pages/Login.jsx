@@ -14,6 +14,7 @@ import { Label } from "@/components/ui/label";
 import StatusMessage from "../components/ui/status-message";
 import PasswordVisibilityToggle from "../components/ui/password-visibility-toggle";
 import { login, handleGoogleAuth } from "../utils/authHandler";
+import Loading from "../pages/Loading";
 
 const Login = () => {
   const [inputData, setInputData] = useState({
@@ -32,9 +33,13 @@ const Login = () => {
 
   const [loginInfo, setLoginInfo] = useState("")
 
+  const [isLoading, setLoading] = useState(true)
+
   const navigate = useNavigate();
 
-
+ useEffect(() => {
+    setTimeout(() => setLoading(false), 2000)
+  }, [])
 
   const handlePasswordVisibility = () => {
     setIsHiddenPassword((prev) => !prev);
@@ -83,7 +88,8 @@ const Login = () => {
     }
   }, [errors]);
 
-  return (
+  return isLoading ? (<Loading/>) : 
+  (
     <div className="h-[calc(100vh-6rem)] flex items-center">
       <Card className="w-[350px] md:w-[428px] dark:border-neutral-800">
         <CardHeader>
