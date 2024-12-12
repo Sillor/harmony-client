@@ -1,14 +1,13 @@
 import React, {useEffect} from 'react'
-import { redirect } from "react-router-dom";
 
 export default function Loading(){
     
 
     return (
-        <>
-        <h2>
+        <div className="w-full h-full flex justify-center items-center">
+        <h2 className="font-bold text-xl">
             Loading...
         </h2>
-        </>
+        </div>
     )
 }
